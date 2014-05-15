@@ -1,0 +1,30 @@
+{
+  "author": "Jason Dobry",
+  "name": "angular-data-mock",
+  "description": "A mock of angular-data for testing purposes.",
+  "version": "0.0.1",
+  "homepage": "https://github.com/jmdobry/angular-data-mock/",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jmdobry/angular-data-mock.git"
+  },
+  "main": "./dist/angular-data-mock.min.js",
+  "ignore": [
+    ".idea/",
+    ".*",
+    "*.iml",
+    "src/",
+    "coverage/",
+    "Gruntfile.js",
+    "node_modules/",
+    "test/",
+    "package.json",
+    "karma.conf.js",
+    "karma.start.js"
+  ],
+  "devDependencies": {
+    "angular": "~1.2.16",
+    "angular-mocks": "~1.2.16",
+    "angular-data": "~0.8.1"
+  }
+}
