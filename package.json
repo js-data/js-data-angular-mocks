@@ -1,11 +1,11 @@
 {
-  "name": "angular-data-mock",
+  "name": "angular-data-mocks",
   "description": "A mock of angular-data for testing purposes.",
   "version": "0.0.1",
-  "homepage": "https://github.com/jmdobry/angular-data-mock",
+  "homepage": "https://github.com/jmdobry/angular-data-mocks",
   "repository": {
     "type": "git",
-    "url": "git://github.com/jmdobry/angular-data-mock.git"
+    "url": "git://github.com/jmdobry/angular-data-mocks.git"
   },
   "author": {
     "name": "Jason Dobry",
@@ -15,7 +15,7 @@
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://github.com/jmdobry/angular-data-mock/blob/master/LICENSE"
+      "url": "https://github.com/jmdobry/angular-data-mocks/blob/master/LICENSE"
     }
   ],
   "devDependencies": {

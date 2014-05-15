@@ -1,9 +1,9 @@
 /*
- * angular-data
- * http://github.com/jmdobry/angular-data
+ * angular-data-mocks
+ * http://github.com/jmdobry/angular-data-mocks
  *
- * Copyright (c) 2014 Jason Dobry <http://jmdobry.github.io/angular-data>
- * Licensed under the MIT license. <https://github.com/jmdobry/angular-data/blob/master/LICENSE>
+ * Copyright (c) 2014 Jason Dobry <http://jmdobry.github.io/angular-data-mocks>
+ * Licensed under the MIT license. <https://github.com/jmdobry/angular-data-mocks/blob/master/LICENSE>
  */
 module.exports = function (grunt) {
 	'use strict';
@@ -33,16 +33,16 @@ module.exports = function (grunt) {
 				options: {
 					banner: '/**\n' +
 						'* @author Jason Dobry <jason.dobry@gmail.com>\n' +
-						'* @file angular-data-mock.min.js\n' +
-						'* @version <%= pkg.version %> - Homepage <https://github.com/jmdobry/angular-data-mock>\n' +
+						'* @file angular-data-mocks.min.js\n' +
+						'* @version <%= pkg.version %> - Homepage <https://github.com/jmdobry/angular-data-mocks>\n' +
 						'* @copyright (c) 2014 Jason Dobry <https://github.com/jmdobry/>\n' +
-						'* @license MIT <https://github.com/jmdobry/angular-data-mock/blob/master/LICENSE>\n' +
+						'* @license MIT <https://github.com/jmdobry/angular-data-mocks/blob/master/LICENSE>\n' +
 						'*\n' +
 						'* @overview A mock of angular-data for testing purposes.\n' +
 						'*/\n'
 				},
 				files: {
-					'dist/angular-data-mock.min.js': ['dist/angular-data-mocks.js']
+					'dist/angular-data-mocks.min.js': ['dist/angular-data-mocks.js']
 				}
 			}
 		},

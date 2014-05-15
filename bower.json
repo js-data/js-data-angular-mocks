@@ -1,14 +1,14 @@
 {
   "author": "Jason Dobry",
-  "name": "angular-data-mock",
+  "name": "angular-data-mocks",
   "description": "A mock of angular-data for testing purposes.",
   "version": "0.0.1",
-  "homepage": "https://github.com/jmdobry/angular-data-mock/",
+  "homepage": "https://github.com/jmdobry/angular-data-mocks/",
   "repository": {
     "type": "git",
-    "url": "git://github.com/jmdobry/angular-data-mock.git"
+    "url": "git://github.com/jmdobry/angular-data-mocks.git"
   },
-  "main": "./dist/angular-data-mock.min.js",
+  "main": "./dist/angular-data-mocks.min.js",
   "ignore": [
     ".idea/",
     ".*",

@@ -30,7 +30,7 @@ module.exports = function (config) {
 		reporters: ['progress', 'coverage'],
 
 		preprocessors: {
-			'dist/angular-data-mock.js': ['coverage']
+			'dist/angular-data-mocks.js': ['coverage']
 		},
 
 		// optionally, configure the reporter
