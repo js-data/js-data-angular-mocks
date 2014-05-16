@@ -14,20 +14,22 @@
  * @description
  * Fake DS implementation suitable for unit testing applications that use the `angular-data.DS` module.
  *
- * __Version:__ 0.0.1
+ * __Version:__ 0.2.0
+ *
+ * __angular-data-mocks requires sinon to be loaded to function.__
  *
  * ## Install
  *
  * #### Bower
  * ```text
- * bower install angular-data-mocks
+ * bower install --save-dev angular-data-mocks
  * ```
  *
- * Load `dist/angular-data-mocks.js` or `dist/angular-data-mocks.min.js` after angular and angular-data.
+ * Load `dist/angular-data-mocks.js` or `dist/angular-data-mocks.min.js` after angular, angular-data, and sinon.
  *
  * #### Npm
  * ```text
- * npm install angular-data-mocks
+ * npm install --save-dev angular-data-mocks
  * ```
  *
  * Load `dist/angular-data-mocks.js` or `dist/angular-data-mocks.min.js` after angular and angular-data.
@@ -38,10 +40,15 @@
  *
  * ## Load into Angular
  * Your test module must depend on the module `angular-data.DS` in order to use angular-data. Initialize the mocks by
- * calling `module('angular-data.mocks')` in a `beforeEach` or something.
+ * calling `module('angular-data.mocks')` in a `beforeEach` or something, before the injector is created.
+ *
+ * See the [testing guide](/documentation/guide/angular-data-mocks/index).
  */
 (function (window, angular, undefined) {
 	'use strict';
+
+	var utils = angular.injector(['angular-data.DS']).get('DSUtils'),
+		errors = angular.injector(['angular-data.DS']).get('DSErrors');
 
 	function prettyPrint(data) {
 		return (angular.isString(data) || angular.isFunction(data)) ? data : angular.toJson(data);
@@ -159,7 +166,8 @@
 				'HTTP',
 				'POST',
 				'PUT',
-				'update'
+				'update',
+				'updateAll'
 			];
 
 		angular.forEach(asyncMethods, function (name) {
@@ -168,6 +176,7 @@
 		});
 
 		this.$get = function () {
+
 			/**
 			 * @doc interface
 			 * @id DSHttpAdapterMock
@@ -175,7 +184,9 @@
 			 * @description
 			 * A mock implementation of `DSHttpAdapter` with helper methods for declaring and testing expectations.
 			 *
-			 * See the [guide](/documentation/guide/overview/index).
+			 * __angular-data-mocks requires sinon to be loaded to function.__
+			 *
+			 * See the [testing guide](/documentation/guide/angular-data-mocks/index).
 			 */
 			var DSHttpAdapter = {
 				/**
@@ -186,7 +197,7 @@
 				 * Create an expectation.
 				 *
 				 * @param {string} name The name of the function that is expected to be called.
-				 * @returns {{respond: Function}}
+				 * @returns {object} expectation
 				 */
 				expect: function (name) {
 					var args = Array.prototype.slice.call(arguments, 1);
@@ -251,56 +262,286 @@
 			 * @doc method
 			 * @id DSHttpAdapterMock.methods:expectCreate
 			 * @name expectCreate
+			 * @description
+			 * Create an expectation that `DSHttpAdapter.create` will be called.
+			 *
+			 * ## Signature:
+			 * ```js
+			 * DSHttpAdapter.expectCreate(resourceConfig, attrs[, options])
+			 * ```
+			 *
+			 * ## Example:
+			 * ```js
+			 *  DSHttpAdapter.expectCreate({
+			 *      baseUrl: '/api',
+			 *      endpoint: '/posts'
+			 *  }, {
+			 *      author: 'John Anderson'
+			 *  }).respond({
+			 *      author: 'John Anderson',
+			 *      id: 1
+			 *  });
+			 * ```
 			 */
 			/**
 			 * @doc method
 			 * @id DSHttpAdapterMock.methods:expectDEL
 			 * @name expectDEL
+			 * @description
+			 * Create an expectation that `DSHttpAdapter.DEL` will be called.
+			 *
+			 * ## Signature:
+			 * ```js
+			 * DSHttpAdapter.expectDEL(url[, config])
+			 * ```
+			 *
+			 * ## Example:
+			 * ```js
+			 *  DSHttpAdapter.expectDEL('/api/posts/1');
+			 * ```
 			 */
 			/**
 			 * @doc method
 			 * @id DSHttpAdapterMock.methods:expectDestroy
 			 * @name expectDestroy
+			 * @description
+			 * Create an expectation that `DSHttpAdapter.destroy` will be called.
+			 *
+			 * ## Signature:
+			 * ```js
+			 * DSHttpAdapter.expectDestroy(resourceConfig, id[, options])
+			 * ```
+			 *
+			 * ## Example:
+			 * ```js
+			 *  DSHttpAdapter.expectDestroy({
+			 *      baseUrl: '/api',
+			 *      endpoint: '/posts'
+			 *  }, 1);
+			 * ```
 			 */
 			/**
 			 * @doc method
 			 * @id DSHttpAdapterMock.methods:expectDestroyAll
 			 * @name expectDestroyAll
+			 * @description
+			 * Create an expectation that `DSHttpAdapter.destroyAll` will be called.
+			 *
+			 * ## Signature:
+			 * ```js
+			 * DSHttpAdapter.expectDestroyAll(resourceConfig, id, params[, options])
+			 * ```
+			 *
+			 * ## Example:
+			 * ```js
+			 *  DSHttpAdapter.expectDestroyAll({
+			 *      baseUrl: '/api',
+			 *      endpoint: '/posts'
+			 *  }, 1, {
+			 *      author: 'Sally'
+			 *  }, {
+			 *      params: {
+			 *          query: {
+			 *              where: {
+			 *                  author: {
+			 *                      '==': 'John Anderson'
+			 *                  }
+			 *              }
+			 *          }
+			 *      }
+			 *  });
+			 * ```
 			 */
 			/**
 			 * @doc method
 			 * @id DSHttpAdapterMock.methods:expectFind
 			 * @name expectFind
+			 * @description
+			 * Create an expectation that `DSHttpAdapter.find` will be called.
+			 *
+			 * ## Signature:
+			 * ```js
+			 * DSHttpAdapter.expectFind(resourceConfig, id[, options])
+			 * ```
+			 *
+			 * ## Example:
+			 * ```js
+			 *  DSHttpAdapter.expectFind({
+			 *      baseUrl: '/api',
+			 *      endpoint: '/posts'
+			 *  }, 1)
+			 *  .respond({
+			 *      author: 'John Anderson',
+			 *      id: 1
+			 *  });
+			 * ```
 			 */
 			/**
 			 * @doc method
 			 * @id DSHttpAdapterMock.methods:expectFindAll
 			 * @name expectFindAll
+			 * @description
+			 * Create an expectation that `DSHttpAdapter.findAll` will be called.
+			 *
+			 * ## Signature:
+			 * ```js
+			 * DSHttpAdapter.expectFindAll(resourceConfig, params[, options])
+			 * ```
+			 *
+			 * ## Example:
+			 * ```js
+			 *  DSHttpAdapter.expectFindAll({
+			 *      baseUrl: '/api',
+			 *      endpoint: '/posts'
+			 *  }, {
+			 *      params: {
+			 *          query: {
+			 *              where: {
+			 *                  author: {
+			 *                      '==': 'John Anderson'
+			 *                  }
+			 *              }
+			 *          }
+			 *      }
+			 *  }).respond([{
+			 *      author: 'Sally',
+			 *      id: 1
+			 *  }]);
+			 * ```
 			 */
 			/**
 			 * @doc method
 			 * @id DSHttpAdapterMock.methods:expectGET
 			 * @name expectGET
+			 * @description
+			 * Create an expectation that `DSHttpAdapter.GET` will be called.
+			 *
+			 * ## Signature:
+			 * ```js
+			 * DSHttpAdapter.expectGET(url[, config])
+			 * ```
+			 *
+			 * ## Example:
+			 * ```js
+			 *  DSHttpAdapter.expectGET('/api/posts/1')
+			 *      .respond({ author: 'John Anderson', id: 1 });
+			 * ```
 			 */
 			/**
 			 * @doc method
 			 * @id DSHttpAdapterMock.methods:expectHTTP
 			 * @name expectHTTP
+			 * @description
+			 * Create an expectation that `DSHttpAdapter.HTTP` will be called.
+			 *
+			 * ## Signature:
+			 * ```js
+			 * DSHttpAdapter.expectHTTP(config)
+			 * ```
+			 *
+			 * ## Example:
+			 * ```js
+			 *  DSHttpAdapter.expectHTTP({
+			 *      url: '/api/posts/1',
+			 *      method: 'GET'
+			 *  }).respond({ author: 'John Anderson', id: 1 });
+			 * ```
 			 */
 			/**
 			 * @doc method
 			 * @id DSHttpAdapterMock.methods:expectPOST
 			 * @name expectPOST
+			 * @description
+			 * Create an expectation that `DSHttpAdapter.POST` will be called.
+			 *
+			 * ## Signature:
+			 * ```js
+			 * DSHttpAdapter.expectPOST(url[, attrs][, config])
+			 * ```
+			 *
+			 * ## Example:
+			 * ```js
+			 *  DSHttpAdapter.expectPOST('/api/posts/1', { author: 'John Anderson' })
+			 *      .respond({ author: 'John Anderson', id: 1 });
+			 * ```
 			 */
 			/**
 			 * @doc method
 			 * @id DSHttpAdapterMock.methods:expectPUT
 			 * @name expectPUT
+			 * @description
+			 * Create an expectation that `DSHttpAdapter.PUT` will be called.
+			 *
+			 * ## Signature:
+			 * ```js
+			 * DSHttpAdapter.expectPUT(url[, attrs][, config])
+			 * ```
+			 *
+			 * ## Example:
+			 * ```js
+			 *  DSHttpAdapter.expectPUT('/api/posts/1', { author: 'Sally' })
+			 *      .respond({ author: 'Sally', id: 1 });
+			 * ```
 			 */
 			/**
 			 * @doc method
-			 * @id DSHttpAdapterMock.methods:expectupdate
-			 * @name expectupdate
+			 * @id DSHttpAdapterMock.methods:expectUpdate
+			 * @name expectUpdate
+			 * @description
+			 * Create an expectation that `DSHttpAdapter.update` will be called.
+			 *
+			 * ## Signature:
+			 * ```js
+			 * DSHttpAdapter.expectUpdate(resourceConfig, id, attrs[, options])
+			 * ```
+			 *
+			 * ## Example:
+			 * ```js
+			 *  DSHttpAdapter.expectUpdate({
+			 *      baseUrl: '/api',
+			 *      endpoint: '/posts'
+			 *  }, 1, {
+			 *      author: 'Sally'
+			 *  }).respond({
+			 *      author: 'Sally',
+			 *      id: 1
+			 *  });
+			 * ```
+			 */
+			/**
+			 * @doc method
+			 * @id DSHttpAdapterMock.methods:expectUpdateAll
+			 * @name expectUpdateAll
+			 * @description
+			 * Create an expectation that `DSHttpAdapter.updateAll` will be called.
+			 *
+			 * ## Signature:
+			 * ```js
+			 * DSHttpAdapter.expectUpdateAll(resourceConfig, attrs, params[, options])
+			 * ```
+			 *
+			 * ## Example:
+			 * ```js
+			 *  DSHttpAdapter.expectUpdateAll({
+			 *      baseUrl: '/api',
+			 *      endpoint: '/posts'
+			 *  }, {
+			 *      author: 'Sally'
+			 *  }, {
+			 *      params: {
+			 *          query: {
+			 *              where: {
+			 *                  author: {
+			 *                      '==': 'John Anderson'
+			 *                  }
+			 *              }
+			 *          }
+			 *      }
+			 *  }).respond([{
+			 *      author: 'Sally',
+			 *      id: 1
+			 *  }]);
+			 * ```
 			 */
 			angular.forEach(asyncMethods, function (name) {
 				DS['expect' + name[0].toUpperCase() + name.substring(1)] = createShortMethod(name, expectations);
@@ -323,7 +564,9 @@
 				'find',
 				'findAll',
 				'refresh',
-				'save'
+				'save',
+				'update',
+				'updateAll'
 			],
 			syncMethods = [
 				'bindOne',
@@ -360,9 +603,12 @@
 			 * @description
 			 * A mock implementation of `DS` with helper methods for declaring and testing expectations.
 			 *
-			 * See the [guide](/documentation/guide/overview/index).
+			 * __angular-data-mocks requires sinon to be loaded to function.__
+			 *
+			 * See the [testing guide](/documentation/guide/angular-data-mocks/index).
 			 */
 			var DS = {
+
 				/**
 				 * @doc method
 				 * @id DSMock.methods:expect
@@ -370,8 +616,28 @@
 				 * @description
 				 * Create an expectation.
 				 *
+				 * ## Signature:
+				 * ```js
+				 * DS.expect(methodName[, ...args])
+				 * ```
+				 *
+				 * ## Example:
+				 * ```js
+				 *  DS.expect('find', 'post', 1).respond({
+				 *      author: 'John Anderson',
+				 *      id: 1
+				 *  });
+				 *
+				 *  UserController.getUser();
+				 *  $scope.$apply();
+				 *
+				 *  DS.flush();
+				 *
+				 *  assert.equal(DS.find.callCount, 1);
+				 * ```
+				 *
 				 * @param {string} name The name of the function that is expected to be called.
-				 * @returns {{respond: Function}}
+				 * @returns {object} expectation
 				 */
 				expect: function (name) {
 					var args = Array.prototype.slice.call(arguments, 1);
@@ -394,6 +660,26 @@
 				 * @name flush
 				 * @description
 				 * Flush the pending expectations.
+				 *
+				 * ## Signature:
+				 * ```js
+				 * DS.flush([count])
+				 * ```
+				 *
+				 * ## Example:
+				 * ```js
+				 *  DS.expectFind('post', 1).respond({
+				 *      author: 'John Anderson',
+				 *      id: 1
+				 *  });
+				 *
+				 *  UserController.getUser();
+				 *  $scope.$apply();
+				 *
+				 *  DS.flush();
+				 *
+				 *  assert.equal(DS.find.callCount, 1);
+				 * ```
 				 *
 				 * @param {number=} count Flush a specified number of requests.
 				 */
@@ -423,49 +709,225 @@
 				 * @name verifyNoOutstandingExpectation
 				 * @description
 				 * Ensure that no expectations remain unfulfilled.
+				 *
+				 * ## Signature:
+				 * ```js
+				 * DS.verifyNoOutstandingExpectation()
+				 * ```
+				 *
+				 * ## Example:
+				 * ```js
+				 * afterEach(function () {
+				 *      DS.verifyNoOutstandingExpectation();
+				 * });
+				 * ```
 				 */
 				verifyNoOutstandingExpectation: function () {
 					$rootScope.$digest();
 					if (expectations.length) {
 						throw new Error('Unsatisfied requests: ' + expectations.join(', '));
 					}
-				}
+				},
+
+				utils: utils,
+				errors: errors
 			};
 
 			/**
 			 * @doc method
 			 * @id DSMock.methods:expectCreate
 			 * @name expectCreate
+			 * @description
+			 * Create an expectation that `DS.create` will be called.
+			 *
+			 * ## Signature:
+			 * ```js
+			 * DS.expectCreate(resourceName, attrs[, options])
+			 * ```
+			 *
+			 * ## Example:
+			 * ```js
+			 *  DS.expectCreate('post', {
+			 *      author: 'John Anderson'
+			 *  }).respond({
+			 *      author: 'John Anderson',
+			 *      id: 1
+			 *  });
+			 * ```
 			 */
 			/**
 			 * @doc method
 			 * @id DSMock.methods:expectDestroy
 			 * @name expectDestroy
+			 * Create an expectation that `DS.destroy` will be called.
+			 *
+			 * ## Signature:
+			 * ```js
+			 * DS.expectDestroy(resourceName, id[, options])
+			 * ```
+			 *
+			 * ## Example:
+			 * ```js
+			 *  DS.expectDestroy('post', 1);
+			 * ```
 			 */
 			/**
 			 * @doc method
 			 * @id DSMock.methods:expectDestroyAll
 			 * @name expectDestroyAll
+			 * Create an expectation that `DS.destroyAll` will be called.
+			 *
+			 * ## Signature:
+			 * ```js
+			 * DS.expectDestroyAll(resourceName, params[, options])
+			 * ```
+			 *
+			 * ## Example:
+			 * ```js
+			 *  DS.expectDestroyAll('post', {
+			 *      query: {
+			 *          where: {
+			 *              author: {
+			 *                  '==': 'John Anderson'
+			 *              }
+			 *          }
+			 *      }
+			 *  });
+			 * ```
 			 */
 			/**
 			 * @doc method
 			 * @id DSMock.methods:expectFind
 			 * @name expectFind
+			 * Create an expectation that `DS.find` will be called.
+			 *
+			 * ## Signature:
+			 * ```js
+			 * DS.expectFind(resourceName, id[, options])
+			 * ```
+			 *
+			 * ## Example:
+			 * ```js
+			 *  DS.expectFind('post', 1).respond({
+			 *      author: 'John Anderson',
+			 *      id: 1
+			 *  });
+			 * ```
 			 */
 			/**
 			 * @doc method
 			 * @id DSMock.methods:expectFindAll
 			 * @name expectFindAll
+			 * Create an expectation that `DS.findAll` will be called.
+			 *
+			 * ## Signature:
+			 * ```js
+			 * DS.expectFindAll(resourceName, params[, options])
+			 * ```
+			 *
+			 * ## Example:
+			 * ```js
+			 *  DS.expectFindAll('post', {
+			 *      query: {
+			 *          where: {
+			 *              author: {
+			 *                  '==': 'John Anderson'
+			 *              }
+			 *          }
+			 *      }
+			 *  }).respond([{
+			 *      author: 'John Anderson',
+			 *      id: 1
+			 *  }]);
+			 * ```
 			 */
 			/**
 			 * @doc method
 			 * @id DSMock.methods:expectRefresh
 			 * @name expectRefresh
+			 * Create an expectation that `DS.refresh` will be called.
+			 *
+			 * ## Signature:
+			 * ```js
+			 * DS.expectRefresh(resourceName, id[, options])
+			 * ```
+			 *
+			 * ## Example:
+			 * ```js
+			 *  DS.expectRefresh('post', 1).respond({
+			 *      author: 'John Anderson',
+			 *      id: 1
+			 *  });
+			 * ```
 			 */
 			/**
 			 * @doc method
 			 * @id DSMock.methods:expectSave
 			 * @name expectSave
+			 * Create an expectation that `DS.save` will be called.
+			 *
+			 * ## Signature:
+			 * ```js
+			 * DS.expectSave(resourceName, id[, options])
+			 * ```
+			 *
+			 * ## Example:
+			 * ```js
+			 *  DS.expectSave('post', 1).respond({
+			 *      author: 'John Anderson',
+			 *      id: 1
+			 *  });
+			 * ```
+			 */
+			/**
+			 * @doc method
+			 * @id DSMock.methods:expectUpdate
+			 * @name expectUpdate
+			 * Create an expectation that `DS.update` will be called.
+			 *
+			 * ## Signature:
+			 * ```js
+			 * DS.expectUpdate(resourceName, attrs, id[, options])
+			 * ```
+			 *
+			 * ## Example:
+			 * ```js
+			 *  DS.expectUpdate('post', 1, {
+			 *      author: 'Sally'
+			 *  }).respond({
+			 *      author: 'Sally',
+			 *      id: 1
+			 *  });
+			 * ```
+			 */
+			/**
+			 * @doc method
+			 * @id DSMock.methods:expectUpdateAll
+			 * @name expectUpdateAll
+			 * Create an expectation that `DS.updateAll` will be called.
+			 *
+			 * ## Signature:
+			 * ```js
+			 * DS.expectUpdateAll(resourceName, attrs, params[, options])
+			 * ```
+			 *
+			 * ## Example:
+			 * ```js
+			 *  DS.expectUpdateAll('post', {
+			 *      author: 'Sally'
+			 *  }, {
+			 *      query: {
+			 *          where: {
+			 *              author: {
+			 *                  '==': 'John Anderson'
+			 *              }
+			 *          }
+			 *      }
+			 *  }).respond([{
+			 *      author: 'Sally',
+			 *      id: 1
+			 *  }]);
+			 * ```
 			 */
 			angular.forEach(asyncMethods, function (name) {
 				DS['expect' + name[0].toUpperCase() + name.substring(1)] = createShortMethod(name, expectations);

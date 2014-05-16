@@ -3,7 +3,6 @@
 // Setup global test variables
 var $rootScope, $q, $log, DS, $httpBackend, p1, p2, p3, p4, p5;
 
-console.log('declaring test app module');
 angular.module('testApp', ['ng', 'ngMock', 'angular-data.DS']);
 
 beforeEach(function () {
