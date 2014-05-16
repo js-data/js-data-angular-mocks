@@ -14,7 +14,7 @@
  * @description
  * Fake angular-data implementation suitable for unit testing angular applications that use the `angular-data.DS` module.
  *
- * __Version:__ 0.3.0
+ * __Version:__ 0.3.2
  *
  * __angular-data-mocks requires sinon to be loaded in order to work.__
  *
@@ -544,7 +544,7 @@
 			 * ```
 			 */
 			angular.forEach(asyncMethods, function (name) {
-				DS['expect' + name[0].toUpperCase() + name.substring(1)] = createShortMethod(name, expectations);
+				DSHttpAdapter['expect' + name[0].toUpperCase() + name.substring(1)] = createShortMethod(name, expectations);
 			});
 
 			angular.extend(DSHttpAdapter, stubs);
