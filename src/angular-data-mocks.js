@@ -12,11 +12,11 @@
  * @id angular-data-mocks
  * @name angular-data-mocks
  * @description
- * Fake DS implementation suitable for unit testing applications that use the `angular-data.DS` module.
+ * Fake angular-data implementation suitable for unit testing angular applications that use the `angular-data.DS` module.
  *
- * __Version:__ 0.2.0
+ * __Version:__ 0.3.0
  *
- * __angular-data-mocks requires sinon to be loaded to function.__
+ * __angular-data-mocks requires sinon to be loaded in order to work.__
  *
  * ## Install
  *
@@ -179,19 +179,19 @@
 
 			/**
 			 * @doc interface
-			 * @id DSHttpAdapterMock
-			 * @name DSHttpAdapterMock
+			 * @id DSHttpAdapter
+			 * @name DSHttpAdapter
 			 * @description
 			 * A mock implementation of `DSHttpAdapter` with helper methods for declaring and testing expectations.
 			 *
-			 * __angular-data-mocks requires sinon to be loaded to function.__
+			 * __angular-data-mocks requires sinon to be loaded in order to work.__
 			 *
 			 * See the [testing guide](/documentation/guide/angular-data-mocks/index).
 			 */
 			var DSHttpAdapter = {
 				/**
 				 * @doc method
-				 * @id DSHttpAdapterMock.methods:expect
+				 * @id DSHttpAdapter.methods:expect
 				 * @name expect
 				 * @description
 				 * Create an expectation.
@@ -216,7 +216,7 @@
 
 				/**
 				 * @doc method
-				 * @id DSHttpAdapterMock.methods:flush
+				 * @id DSHttpAdapter.methods:flush
 				 * @name flush
 				 * @description
 				 * Flush the pending expectations.
@@ -245,7 +245,7 @@
 
 				/**
 				 * @doc method
-				 * @id DSHttpAdapterMock.methods:verifyNoOutstandingExpectation
+				 * @id DSHttpAdapter.methods:verifyNoOutstandingExpectation
 				 * @name verifyNoOutstandingExpectation
 				 * @description
 				 * Ensure that no expectations remain unfulfilled.
@@ -260,7 +260,7 @@
 
 			/**
 			 * @doc method
-			 * @id DSHttpAdapterMock.methods:expectCreate
+			 * @id DSHttpAdapter.methods:expectCreate
 			 * @name expectCreate
 			 * @description
 			 * Create an expectation that `DSHttpAdapter.create` will be called.
@@ -285,7 +285,7 @@
 			 */
 			/**
 			 * @doc method
-			 * @id DSHttpAdapterMock.methods:expectDEL
+			 * @id DSHttpAdapter.methods:expectDEL
 			 * @name expectDEL
 			 * @description
 			 * Create an expectation that `DSHttpAdapter.DEL` will be called.
@@ -302,7 +302,7 @@
 			 */
 			/**
 			 * @doc method
-			 * @id DSHttpAdapterMock.methods:expectDestroy
+			 * @id DSHttpAdapter.methods:expectDestroy
 			 * @name expectDestroy
 			 * @description
 			 * Create an expectation that `DSHttpAdapter.destroy` will be called.
@@ -322,7 +322,7 @@
 			 */
 			/**
 			 * @doc method
-			 * @id DSHttpAdapterMock.methods:expectDestroyAll
+			 * @id DSHttpAdapter.methods:expectDestroyAll
 			 * @name expectDestroyAll
 			 * @description
 			 * Create an expectation that `DSHttpAdapter.destroyAll` will be called.
@@ -354,7 +354,7 @@
 			 */
 			/**
 			 * @doc method
-			 * @id DSHttpAdapterMock.methods:expectFind
+			 * @id DSHttpAdapter.methods:expectFind
 			 * @name expectFind
 			 * @description
 			 * Create an expectation that `DSHttpAdapter.find` will be called.
@@ -378,7 +378,7 @@
 			 */
 			/**
 			 * @doc method
-			 * @id DSHttpAdapterMock.methods:expectFindAll
+			 * @id DSHttpAdapter.methods:expectFindAll
 			 * @name expectFindAll
 			 * @description
 			 * Create an expectation that `DSHttpAdapter.findAll` will be called.
@@ -411,7 +411,7 @@
 			 */
 			/**
 			 * @doc method
-			 * @id DSHttpAdapterMock.methods:expectGET
+			 * @id DSHttpAdapter.methods:expectGET
 			 * @name expectGET
 			 * @description
 			 * Create an expectation that `DSHttpAdapter.GET` will be called.
@@ -429,7 +429,7 @@
 			 */
 			/**
 			 * @doc method
-			 * @id DSHttpAdapterMock.methods:expectHTTP
+			 * @id DSHttpAdapter.methods:expectHTTP
 			 * @name expectHTTP
 			 * @description
 			 * Create an expectation that `DSHttpAdapter.HTTP` will be called.
@@ -449,7 +449,7 @@
 			 */
 			/**
 			 * @doc method
-			 * @id DSHttpAdapterMock.methods:expectPOST
+			 * @id DSHttpAdapter.methods:expectPOST
 			 * @name expectPOST
 			 * @description
 			 * Create an expectation that `DSHttpAdapter.POST` will be called.
@@ -467,7 +467,7 @@
 			 */
 			/**
 			 * @doc method
-			 * @id DSHttpAdapterMock.methods:expectPUT
+			 * @id DSHttpAdapter.methods:expectPUT
 			 * @name expectPUT
 			 * @description
 			 * Create an expectation that `DSHttpAdapter.PUT` will be called.
@@ -485,7 +485,7 @@
 			 */
 			/**
 			 * @doc method
-			 * @id DSHttpAdapterMock.methods:expectUpdate
+			 * @id DSHttpAdapter.methods:expectUpdate
 			 * @name expectUpdate
 			 * @description
 			 * Create an expectation that `DSHttpAdapter.update` will be called.
@@ -510,7 +510,7 @@
 			 */
 			/**
 			 * @doc method
-			 * @id DSHttpAdapterMock.methods:expectUpdateAll
+			 * @id DSHttpAdapter.methods:expectUpdateAll
 			 * @name expectUpdateAll
 			 * @description
 			 * Create an expectation that `DSHttpAdapter.updateAll` will be called.
@@ -603,7 +603,7 @@
 			 * @description
 			 * A mock implementation of `DS` with helper methods for declaring and testing expectations.
 			 *
-			 * __angular-data-mocks requires sinon to be loaded to function.__
+			 * __angular-data-mocks requires sinon to be loaded in order to work.__
 			 *
 			 * See the [testing guide](/documentation/guide/angular-data-mocks/index).
 			 */
@@ -759,6 +759,7 @@
 			 * @doc method
 			 * @id DSMock.methods:expectDestroy
 			 * @name expectDestroy
+			 * @description
 			 * Create an expectation that `DS.destroy` will be called.
 			 *
 			 * ## Signature:
@@ -775,6 +776,7 @@
 			 * @doc method
 			 * @id DSMock.methods:expectDestroyAll
 			 * @name expectDestroyAll
+			 * @description
 			 * Create an expectation that `DS.destroyAll` will be called.
 			 *
 			 * ## Signature:
@@ -799,6 +801,7 @@
 			 * @doc method
 			 * @id DSMock.methods:expectFind
 			 * @name expectFind
+			 * @description
 			 * Create an expectation that `DS.find` will be called.
 			 *
 			 * ## Signature:
@@ -818,6 +821,7 @@
 			 * @doc method
 			 * @id DSMock.methods:expectFindAll
 			 * @name expectFindAll
+			 * @description
 			 * Create an expectation that `DS.findAll` will be called.
 			 *
 			 * ## Signature:
@@ -845,6 +849,7 @@
 			 * @doc method
 			 * @id DSMock.methods:expectRefresh
 			 * @name expectRefresh
+			 * @description
 			 * Create an expectation that `DS.refresh` will be called.
 			 *
 			 * ## Signature:
@@ -864,6 +869,7 @@
 			 * @doc method
 			 * @id DSMock.methods:expectSave
 			 * @name expectSave
+			 * @description
 			 * Create an expectation that `DS.save` will be called.
 			 *
 			 * ## Signature:
@@ -883,6 +889,7 @@
 			 * @doc method
 			 * @id DSMock.methods:expectUpdate
 			 * @name expectUpdate
+			 * @description
 			 * Create an expectation that `DS.update` will be called.
 			 *
 			 * ## Signature:
@@ -904,6 +911,7 @@
 			 * @doc method
 			 * @id DSMock.methods:expectUpdateAll
 			 * @name expectUpdateAll
+			 * @description
 			 * Create an expectation that `DS.updateAll` will be called.
 			 *
 			 * ## Signature:

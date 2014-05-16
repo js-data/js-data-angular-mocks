@@ -1,7 +1,7 @@
 {
   "name": "angular-data-mocks",
   "description": "A mock of angular-data for testing purposes.",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "homepage": "https://github.com/jmdobry/angular-data-mocks",
   "repository": {
     "type": "git",
