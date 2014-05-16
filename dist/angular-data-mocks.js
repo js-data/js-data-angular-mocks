@@ -1,7 +1,7 @@
 /**
  * @author Jason Dobry <jason.dobry@gmail.com>
  * @file angular-data-mocks.js
- * @version 0.3.0 - Homepage <https://github.com/jmdobry/angular-data-mocks>
+ * @version 0.3.1 - Homepage <https://github.com/jmdobry/angular-data-mocks>
  * @copyright (c) 2014 Jason Dobry <https://github.com/jmdobry/>
  * @license MIT <https://github.com/jmdobry/angular-data-mocks/blob/master/LICENSE>
  *
@@ -598,8 +598,8 @@
 
 			/**
 			 * @doc interface
-			 * @id DSMock
-			 * @name DSMock
+			 * @id DS
+			 * @name DS
 			 * @description
 			 * A mock implementation of `DS` with helper methods for declaring and testing expectations.
 			 *
@@ -611,7 +611,7 @@
 
 				/**
 				 * @doc method
-				 * @id DSMock.methods:expect
+				 * @id DS.methods:expect
 				 * @name expect
 				 * @description
 				 * Create an expectation.
@@ -656,7 +656,7 @@
 
 				/**
 				 * @doc method
-				 * @id DSMock.methods:flush
+				 * @id DS.methods:flush
 				 * @name flush
 				 * @description
 				 * Flush the pending expectations.
@@ -705,7 +705,7 @@
 
 				/**
 				 * @doc method
-				 * @id DSMock.methods:verifyNoOutstandingExpectation
+				 * @id DS.methods:verifyNoOutstandingExpectation
 				 * @name verifyNoOutstandingExpectation
 				 * @description
 				 * Ensure that no expectations remain unfulfilled.
@@ -735,7 +735,7 @@
 
 			/**
 			 * @doc method
-			 * @id DSMock.methods:expectCreate
+			 * @id DS.methods:expectCreate
 			 * @name expectCreate
 			 * @description
 			 * Create an expectation that `DS.create` will be called.
@@ -757,7 +757,7 @@
 			 */
 			/**
 			 * @doc method
-			 * @id DSMock.methods:expectDestroy
+			 * @id DS.methods:expectDestroy
 			 * @name expectDestroy
 			 * @description
 			 * Create an expectation that `DS.destroy` will be called.
@@ -774,7 +774,7 @@
 			 */
 			/**
 			 * @doc method
-			 * @id DSMock.methods:expectDestroyAll
+			 * @id DS.methods:expectDestroyAll
 			 * @name expectDestroyAll
 			 * @description
 			 * Create an expectation that `DS.destroyAll` will be called.
@@ -799,7 +799,7 @@
 			 */
 			/**
 			 * @doc method
-			 * @id DSMock.methods:expectFind
+			 * @id DS.methods:expectFind
 			 * @name expectFind
 			 * @description
 			 * Create an expectation that `DS.find` will be called.
@@ -819,7 +819,7 @@
 			 */
 			/**
 			 * @doc method
-			 * @id DSMock.methods:expectFindAll
+			 * @id DS.methods:expectFindAll
 			 * @name expectFindAll
 			 * @description
 			 * Create an expectation that `DS.findAll` will be called.
@@ -847,7 +847,7 @@
 			 */
 			/**
 			 * @doc method
-			 * @id DSMock.methods:expectRefresh
+			 * @id DS.methods:expectRefresh
 			 * @name expectRefresh
 			 * @description
 			 * Create an expectation that `DS.refresh` will be called.
@@ -867,7 +867,7 @@
 			 */
 			/**
 			 * @doc method
-			 * @id DSMock.methods:expectSave
+			 * @id DS.methods:expectSave
 			 * @name expectSave
 			 * @description
 			 * Create an expectation that `DS.save` will be called.
@@ -887,7 +887,7 @@
 			 */
 			/**
 			 * @doc method
-			 * @id DSMock.methods:expectUpdate
+			 * @id DS.methods:expectUpdate
 			 * @name expectUpdate
 			 * @description
 			 * Create an expectation that `DS.update` will be called.
@@ -909,7 +909,7 @@
 			 */
 			/**
 			 * @doc method
-			 * @id DSMock.methods:expectUpdateAll
+			 * @id DS.methods:expectUpdateAll
 			 * @name expectUpdateAll
 			 * @description
 			 * Create an expectation that `DS.updateAll` will be called.

@@ -2,7 +2,7 @@
   "author": "Jason Dobry",
   "name": "angular-data-mocks",
   "description": "A mock of angular-data for testing purposes.",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "homepage": "https://github.com/jmdobry/angular-data-mocks/",
   "repository": {
     "type": "git",
