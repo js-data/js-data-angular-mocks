@@ -100,7 +100,8 @@ module.exports = function (grunt) {
 		'uglify:dist'
 	]);
 	grunt.registerTask('default', ['build']);
+	grunt.registerTask('go', ['build', 'watch']);
 
 	// Used by TravisCI
-	grunt.registerTask('ci', ['build', 'karma:ci', 'coveralls']);
+	grunt.registerTask('ci', ['build', 'karma:ci']);
 };
