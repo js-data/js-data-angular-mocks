@@ -1,7 +1,7 @@
 /**
  * @author Jason Dobry <jason.dobry@gmail.com>
  * @file angular-data-mocks.js
- * @version 0.4.0 - Homepage <https://github.com/jmdobry/angular-data-mocks>
+ * @version 0.4.1 - Homepage <https://github.com/jmdobry/angular-data-mocks>
  * @copyright (c) 2014 Jason Dobry <https://github.com/jmdobry/>
  * @license MIT <https://github.com/jmdobry/angular-data-mocks/blob/master/LICENSE>
  *
@@ -172,6 +172,7 @@
 
     angular.forEach(asyncMethods, function (name) {
       stubs[name] = mockAsync(name, 'DSHttpAdapter', expectations, requests);
+      sinon.spy(stubs, name);
     });
 
     this.$get = function () {
@@ -566,6 +567,7 @@
 
     angular.forEach(asyncMethods, function (name) {
       stubs[name] = mockAsync(name, 'DSLocalStorageAdapter', expectations, requests);
+      sinon.spy(stubs, name);
     });
 
     this.$get = function () {
@@ -798,6 +800,7 @@
 
     angular.forEach(asyncMethods, function (name) {
       stubs[name] = mockAsync(name, 'DS', expectations, requests);
+      sinon.spy(stubs, name);
     });
 
     angular.forEach(syncMethods, function (name) {

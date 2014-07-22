@@ -172,6 +172,7 @@
 
     angular.forEach(asyncMethods, function (name) {
       stubs[name] = mockAsync(name, 'DSHttpAdapter', expectations, requests);
+      sinon.spy(stubs, name);
     });
 
     this.$get = function () {
@@ -566,6 +567,7 @@
 
     angular.forEach(asyncMethods, function (name) {
       stubs[name] = mockAsync(name, 'DSLocalStorageAdapter', expectations, requests);
+      sinon.spy(stubs, name);
     });
 
     this.$get = function () {
@@ -798,6 +800,7 @@
 
     angular.forEach(asyncMethods, function (name) {
       stubs[name] = mockAsync(name, 'DS', expectations, requests);
+      sinon.spy(stubs, name);
     });
 
     angular.forEach(syncMethods, function (name) {
