@@ -1,7 +1,7 @@
 /**
  * @author Jason Dobry <jason.dobry@gmail.com>
  * @file angular-data-mocks.js
- * @version 0.4.1 - Homepage <https://github.com/jmdobry/angular-data-mocks>
+ * @version 0.5.0 - Homepage <https://github.com/jmdobry/angular-data-mocks>
  * @copyright (c) 2014 Jason Dobry <https://github.com/jmdobry/>
  * @license MIT <https://github.com/jmdobry/angular-data-mocks/blob/master/LICENSE>
  *
@@ -153,6 +153,7 @@
 
   function DSHttpAdapterProvider() {
     var expectations = [];
+    var definitions = [];
     var requests = [];
     var stubs = {};
     var asyncMethods = [
@@ -248,6 +249,51 @@
             }
           }
           $rootScope.$digest();
+        },
+
+        /**
+         * @doc method
+         * @id DSHttpAdapter.methods:when
+         * @name when
+         * @description
+         * Create a when expectation.
+         *
+         * ## Signature:
+         * ```js
+         * DSHttpAdapter.when(methodName[, ...args])
+         * ```
+         *
+         * ## Example:
+         * ```js
+         *  DSHttpAdapter.when('GET').respond({
+				 *      author: 'John Anderson',
+				 *      id: 1
+				 *  });
+         *
+         *  UserController.getUser();
+         *  $scope.$apply();
+         *
+         *  DSHttpAdapter.flush();
+         *
+         *  assert.equal(DSHttpAdapter.find.callCount, 1);
+         * ```
+         *
+         * @param {string} name The name of the function to respond to.
+         * @returns {object} expectation
+         */
+        when: function (name) {
+          var args = Array.prototype.slice.call(arguments, 1);
+          if (args[0] === undefined) {
+            throw new Error('Resource not defined for definition');
+          }
+          var definition = new MockDSExpectation(name, args);
+          definitions.push(definition);
+
+          return {
+            respond: function () {
+              definition.response = Array.prototype.slice.call(arguments);
+            }
+          };
         },
 
         /**
@@ -556,6 +602,7 @@
 
   function DSLocalStorageAdapterProvider() {
     var expectations = [];
+    var definitions = [];
     var requests = [];
     var stubs = {};
     var asyncMethods = [
@@ -643,6 +690,51 @@
             }
           }
           $rootScope.$digest();
+        },
+
+        /**
+         * @doc method
+         * @id DSLocalStorageAdapter.methods:when
+         * @name when
+         * @description
+         * Create a when expectation.
+         *
+         * ## Signature:
+         * ```js
+         * DSLocalStorageAdapter.when(methodName[, ...args])
+         * ```
+         *
+         * ## Example:
+         * ```js
+         *  DSLocalStorageAdapter.when('find', { name: 'post', idAttribute: 'id' }, 1).respond({
+				 *      author: 'John Anderson',
+				 *      id: 1
+				 *  });
+         *
+         *  UserController.getUser();
+         *  $scope.$apply();
+         *
+         *  DSLocalStorageAdapter.flush();
+         *
+         *  assert.equal(DS.find.callCount, 1);
+         * ```
+         *
+         * @param {string} name The name of the function to respond to.
+         * @returns {object} expectation
+         */
+        when: function (name) {
+          var args = Array.prototype.slice.call(arguments, 1);
+          if (args[0] === undefined) {
+            throw new Error('Resource not defined for definition');
+          }
+          var definition = new MockDSExpectation(name, args);
+          definitions.push(definition);
+
+          return {
+            respond: function () {
+              definition.response = Array.prototype.slice.call(arguments);
+            }
+          };
         },
 
         /**
@@ -765,38 +857,39 @@
   }
 
   function DSProvider() {
-    var expectations = [],
-      requests = [],
-      stubs = {},
-      asyncMethods = [
-        'create',
-        'destroy',
-        'destroyAll',
-        'find',
-        'findAll',
-        'loadRelations',
-        'refresh',
-        'save',
-        'update',
-        'updateAll'
-      ],
-      syncMethods = [
-        'bindAll',
-        'bindOne',
-        'changes',
-        'defineResource',
-        'createInstance',
-        'digest',
-        'eject',
-        'ejectAll',
-        'filter',
-        'get',
-        'hasChanges',
-        'inject',
-        'lastModified',
-        'lastSaved',
-        'previous'
-      ];
+    var expectations = [];
+    var definitions = [];
+    var requests = [];
+    var stubs = {};
+    var asyncMethods = [
+      'create',
+      'destroy',
+      'destroyAll',
+      'find',
+      'findAll',
+      'loadRelations',
+      'refresh',
+      'save',
+      'update',
+      'updateAll'
+    ];
+    var syncMethods = [
+      'bindAll',
+      'bindOne',
+      'changes',
+      'defineResource',
+      'createInstance',
+      'digest',
+      'eject',
+      'ejectAll',
+      'filter',
+      'get',
+      'hasChanges',
+      'inject',
+      'lastModified',
+      'lastSaved',
+      'previous'
+    ];
 
     angular.forEach(asyncMethods, function (name) {
       stubs[name] = mockAsync(name, 'DS', expectations, requests);
@@ -920,6 +1013,51 @@
             }
           }
           $rootScope.$digest();
+        },
+
+        /**
+         * @doc method
+         * @id DS.methods:when
+         * @name when
+         * @description
+         * Create a when expectation.
+         *
+         * ## Signature:
+         * ```js
+         * DS.when(methodName[, ...args])
+         * ```
+         *
+         * ## Example:
+         * ```js
+         *  DS.when('find', 'post', 1).respond({
+				 *      author: 'John Anderson',
+				 *      id: 1
+				 *  });
+         *
+         *  UserController.getUser();
+         *  $scope.$apply();
+         *
+         *  DS.flush();
+         *
+         *  assert.equal(DS.find.callCount, 1);
+         * ```
+         *
+         * @param {string} name The name of the function to respond to.
+         * @returns {object} expectation
+         */
+        when: function (name) {
+          var args = Array.prototype.slice.call(arguments, 1);
+          if (args[0] === undefined) {
+            throw new Error('Resource not defined for definition');
+          }
+          var definition = new MockDSExpectation(name, args);
+          definitions.push(definition);
+
+          return {
+            respond: function () {
+              definition.response = Array.prototype.slice.call(arguments);
+            }
+          };
         },
 
         /**
