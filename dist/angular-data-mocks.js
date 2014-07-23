@@ -2,7 +2,7 @@
 /**
  * @author Jason Dobry <jason.dobry@gmail.com>
  * @file angular-data-mocks.js
- * @version 0.5.1 - Homepage <https://github.com/jmdobry/angular-data-mocks>
+ * @version 0.5.2 - Homepage <https://github.com/jmdobry/angular-data-mocks>
  * @copyright (c) 2014 Jason Dobry <https://github.com/jmdobry/>
  * @license MIT <https://github.com/jmdobry/angular-data-mocks/blob/master/LICENSE>
  *
@@ -92,11 +92,11 @@ function DSHttpAdapterProvider() {
        * @param {number=} count Flush a specified number of requests.
        */
       flush: function (count) {
-        if (!responses.length) throw new Error('No pending DS requests to flush !');
+        if (!responses.length) throw new Error('No pending DSHttpAdapter requests to flush !');
 
         if (angular.isDefined(count)) {
           while (count--) {
-            if (!responses.length) throw new Error('No more pending DS requests to flush !');
+            if (!responses.length) throw new Error('No more pending DSHttpAdapter requests to flush !');
             responses.shift()();
           }
         } else {
@@ -534,11 +534,11 @@ function DSLocalStorageAdapterProvider() {
        * @param {number=} count Flush a specified number of requests.
        */
       flush: function (count) {
-        if (!responses.length) throw new Error('No pending DS requests to flush !');
+        if (!responses.length) throw new Error('No pending DSLocalStorageAdapter requests to flush !');
 
         if (angular.isDefined(count)) {
           while (count--) {
-            if (!responses.length) throw new Error('No more pending DS requests to flush !');
+            if (!responses.length) throw new Error('No more pending DSLocalStorageAdapter requests to flush !');
             responses.shift()();
           }
         } else {
@@ -573,7 +573,7 @@ function DSLocalStorageAdapterProvider() {
        *
        *  DSLocalStorageAdapter.flush();
        *
-       *  assert.equal(DS.find.callCount, 1);
+       *  assert.equal(DSLocalStorageAdapter.find.callCount, 1);
        * ```
        *
        * @param {string} name The name of the function to respond to.
@@ -755,7 +755,11 @@ function DSProvider() {
   this.$get = ['DSMockUtils', 'DSUtils', 'DSErrors', function (DSMockUtils, DSUtils, DSErrors) {
 
     var MockDSExpectation = DSMockUtils.MockDSExpectation;
-    var defaults = {};
+    var defaults = {
+      deserialize: function (resourceName, data) {
+        return data.data ? data.data : data;
+      }
+    };
 
     angular.forEach(asyncMethods, function (name) {
       stubs[name] = DSMockUtils.mockAsync(name, 'DS', expectations, definitions, requests, responses);
@@ -1166,7 +1170,7 @@ module.exports = DSProvider;
  * @description
  * Fake angular-data implementation suitable for unit testing angular applications that use the `angular-data.DS` module.
  *
- * __Version:__ 0.5.1
+ * __Version:__ 0.5.2
  *
  * __angular-data-mocks requires SinonJS to be loaded in order to work.__
  *
@@ -1232,9 +1236,8 @@ module.exports = DSProvider;
           responses.push(createResponse(resourceName, deferred, expectation.response));
           return deferred.promise;
         } else {
-          throw new Error('No response defined for DSHttpAdapter.' + expectation.method);
+          throw new Error('No response defined for ' + namespace + '.' + expectation.method);
         }
-        return;
       }
 
       // try to match request to any backend definitions
@@ -1248,12 +1251,11 @@ module.exports = DSProvider;
           } else {
             throw new Error('No response defined !');
           }
-          return;
         }
       }
 
       // Any requests that made it this far aren't being handled, so throw an exception
-      throw new Error('Unexpected request: DSHttpAdapter.' + name + ' ' + resourceName + '\n' +
+      throw new Error('Unexpected request: ' + namespace + '.' + name + ' ' + resourceName + '\n' +
         'No more requests expected');
     };
   }
@@ -1353,7 +1355,7 @@ module.exports = DSProvider;
     'angular-data.DSHttpAdapterMock',
     'angular-data.DSLocalStorageAdapterMock'
   ])
-    .value('version', '0.5.1');
+    .value('version', '0.5.2');
 
 })(window, window.angular);
 

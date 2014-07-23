@@ -73,11 +73,11 @@ function DSLocalStorageAdapterProvider() {
        * @param {number=} count Flush a specified number of requests.
        */
       flush: function (count) {
-        if (!responses.length) throw new Error('No pending DS requests to flush !');
+        if (!responses.length) throw new Error('No pending DSLocalStorageAdapter requests to flush !');
 
         if (angular.isDefined(count)) {
           while (count--) {
-            if (!responses.length) throw new Error('No more pending DS requests to flush !');
+            if (!responses.length) throw new Error('No more pending DSLocalStorageAdapter requests to flush !');
             responses.shift()();
           }
         } else {
@@ -112,7 +112,7 @@ function DSLocalStorageAdapterProvider() {
        *
        *  DSLocalStorageAdapter.flush();
        *
-       *  assert.equal(DS.find.callCount, 1);
+       *  assert.equal(DSLocalStorageAdapter.find.callCount, 1);
        * ```
        *
        * @param {string} name The name of the function to respond to.

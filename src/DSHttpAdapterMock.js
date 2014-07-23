@@ -91,11 +91,11 @@ function DSHttpAdapterProvider() {
        * @param {number=} count Flush a specified number of requests.
        */
       flush: function (count) {
-        if (!responses.length) throw new Error('No pending DS requests to flush !');
+        if (!responses.length) throw new Error('No pending DSHttpAdapter requests to flush !');
 
         if (angular.isDefined(count)) {
           while (count--) {
-            if (!responses.length) throw new Error('No more pending DS requests to flush !');
+            if (!responses.length) throw new Error('No more pending DSHttpAdapter requests to flush !');
             responses.shift()();
           }
         } else {
