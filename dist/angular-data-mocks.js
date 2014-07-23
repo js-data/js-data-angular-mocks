@@ -2,7 +2,7 @@
 /**
  * @author Jason Dobry <jason.dobry@gmail.com>
  * @file angular-data-mocks.js
- * @version 0.5.2 - Homepage <https://github.com/jmdobry/angular-data-mocks>
+ * @version 0.5.3 - Homepage <https://github.com/jmdobry/angular-data-mocks>
  * @copyright (c) 2014 Jason Dobry <https://github.com/jmdobry/>
  * @license MIT <https://github.com/jmdobry/angular-data-mocks/blob/master/LICENSE>
  *
@@ -716,6 +716,7 @@ function DSLocalStorageAdapterProvider() {
 module.exports = DSLocalStorageAdapterProvider;
 
 },{}],3:[function(require,module,exports){
+/*jshint evil:true*/
 function DSProvider() {
   var expectations = [];
   var definitions = [];
@@ -752,7 +753,41 @@ function DSProvider() {
     'previous'
   ];
 
-  this.$get = ['DSMockUtils', 'DSUtils', 'DSErrors', function (DSMockUtils, DSUtils, DSErrors) {
+  var methodsToProxy = [
+    'bindAll',
+    'bindOne',
+    'create',
+    'createInstance',
+    'destroy',
+    'destroyAll',
+    'filter',
+    'find',
+    'findAll',
+    'get',
+    'hasChanges',
+    'inject',
+    'lastModified',
+    'lastSaved',
+    'loadRelations',
+    'previous',
+    'refresh',
+    'save',
+    'update',
+    'updateAll'
+  ];
+
+  function Resource(utils, options) {
+
+    utils.deepMixIn(this, options);
+
+    if ('endpoint' in options) {
+      this.endpoint = options.endpoint;
+    } else {
+      this.endpoint = this.name;
+    }
+  }
+
+  this.$get = ['DSMockUtils', 'DSUtils', 'DSErrors', '$log', function (DSMockUtils, DSUtils, DSErrors, $log) {
 
     var MockDSExpectation = DSMockUtils.MockDSExpectation;
     var defaults = {
@@ -784,6 +819,8 @@ function DSProvider() {
      * See the [testing guide](/documentation/guide/angular-data-mocks/index).
      */
     var DS = {
+      store: {},
+      definitions: {},
 
       defaults: defaults,
 
@@ -1156,6 +1193,74 @@ function DSProvider() {
 
     angular.extend(DS, stubs);
 
+    DS.defineResource = function (definition) {
+      var DS = this;
+
+      if (DSUtils.isString(definition)) {
+        definition = definition.replace(/\s/gi, '');
+        definition = {
+          name: definition
+        };
+      }
+
+      try {
+        // Inherit from global defaults
+        Resource.prototype = DS.defaults;
+        DS.definitions[definition.name] = new Resource(DSUtils, definition);
+
+        var def = DS.definitions[definition.name];
+
+        // Create the wrapper class for the new resource
+        def.class = definition.name[0].toUpperCase() + definition.name.substring(1);
+        eval('function ' + def.class + '() {}');
+        def[def.class] = eval(def.class);
+
+        // Apply developer-defined methods
+        if (def.methods) {
+          DSUtils.deepMixIn(def[def.class].prototype, def.methods);
+        }
+
+        // Initialize store data for the new resource
+        DS.store[def.name] = {
+          collection: [],
+          completedQueries: {},
+          pendingQueries: {},
+          index: {},
+          modified: {},
+          saved: {},
+          previousAttributes: {},
+          observers: {},
+          collectionModified: 0
+        };
+
+        // Proxy DS methods with shorthand ones
+        angular.forEach(methodsToProxy, function (name) {
+          if (name === 'bindOne' || name === 'bindAll') {
+            def[name] = function () {
+              var args = Array.prototype.slice.call(arguments);
+              args.splice(2, 0, def.name);
+              return DS[name].apply(DS, args);
+            };
+          } else {
+            def[name] = function () {
+              var args = Array.prototype.slice.call(arguments);
+              args.unshift(def.name);
+              return DS[name].apply(DS, args);
+            };
+          }
+        });
+
+        return def;
+      } catch (err) {
+        $log.error(err);
+        delete this.definitions[definition.name];
+        delete this.store[definition.name];
+        throw err;
+      }
+    };
+
+    sinon.spy(DS, 'defineResource');
+
     return DS;
   }];
 }
@@ -1170,7 +1275,7 @@ module.exports = DSProvider;
  * @description
  * Fake angular-data implementation suitable for unit testing angular applications that use the `angular-data.DS` module.
  *
- * __Version:__ 0.5.2
+ * __Version:__ 0.5.3
  *
  * __angular-data-mocks requires SinonJS to be loaded in order to work.__
  *
@@ -1355,7 +1460,7 @@ module.exports = DSProvider;
     'angular-data.DSHttpAdapterMock',
     'angular-data.DSLocalStorageAdapterMock'
   ])
-    .value('version', '0.5.2');
+    .value('version', '0.5.3');
 
 })(window, window.angular);
 

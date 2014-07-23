@@ -1,5 +1,8 @@
 angular.module('testApp', ['angular-data.DS'])
-  .controller('TestCtrl', function ($scope, DS) {
+  .service('User', function (DS) {
+    return DS.defineResource('user');
+  })
+  .controller('TestCtrl', function ($scope, DS, User) {
     'use strict';
 
     $scope.test = function () {
@@ -30,6 +33,8 @@ angular.module('testApp', ['angular-data.DS'])
       DS.find('post', 1);
 
       DS.find('post', 1);
+
+      User.find(4);
 
       return DS.find('user', 5);
     };

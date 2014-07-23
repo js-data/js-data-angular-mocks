@@ -38,6 +38,11 @@ describe('test', function () {
       id: 5
     });
 
+    DS.expectFind('user', 4).respond({
+      name: 'Sally',
+      id: 4
+    });
+
     DS.expectFind('user', 5).respond({
       name: 'John',
       id: 5
@@ -55,6 +60,6 @@ describe('test', function () {
 
     assert.deepEqual($scope.injected, { test: 'test' });
 
-    assert.equal(DS.find.callCount, 3);
+    assert.equal(DS.find.callCount, 4);
   });
 });
