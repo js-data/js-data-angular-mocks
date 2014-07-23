@@ -71,9 +71,8 @@
           responses.push(createResponse(resourceName, deferred, expectation.response));
           return deferred.promise;
         } else {
-          throw new Error('No response defined for DSHttpAdapter.' + expectation.method);
+          throw new Error('No response defined for ' + namespace + '.' + expectation.method);
         }
-        return;
       }
 
       // try to match request to any backend definitions
@@ -87,12 +86,11 @@
           } else {
             throw new Error('No response defined !');
           }
-          return;
         }
       }
 
       // Any requests that made it this far aren't being handled, so throw an exception
-      throw new Error('Unexpected request: DSHttpAdapter.' + name + ' ' + resourceName + '\n' +
+      throw new Error('Unexpected request: ' + namespace + '.' + name + ' ' + resourceName + '\n' +
         'No more requests expected');
     };
   }

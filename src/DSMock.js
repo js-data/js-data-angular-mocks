@@ -37,7 +37,11 @@ function DSProvider() {
   this.$get = ['DSMockUtils', 'DSUtils', 'DSErrors', function (DSMockUtils, DSUtils, DSErrors) {
 
     var MockDSExpectation = DSMockUtils.MockDSExpectation;
-    var defaults = {};
+    var defaults = {
+      deserialize: function (resourceName, data) {
+        return data.data ? data.data : data;
+      }
+    };
 
     angular.forEach(asyncMethods, function (name) {
       stubs[name] = DSMockUtils.mockAsync(name, 'DS', expectations, definitions, requests, responses);
