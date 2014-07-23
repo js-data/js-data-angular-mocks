@@ -12,6 +12,8 @@ angular.module('testApp', ['angular-data.DS'])
         }
       });
 
+      DSHttpAdapter.GET('test.com');
+
       $scope.injected = DS.inject('user', {
         name: 'Sally',
         id: 6
@@ -24,6 +26,10 @@ angular.module('testApp', ['angular-data.DS'])
           }
         }
       });
+
+      DS.find('post', 1);
+
+      DS.find('post', 1);
 
       return DS.find('user', 5);
     };

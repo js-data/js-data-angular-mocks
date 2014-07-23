@@ -22,7 +22,7 @@ module.exports = function (config) {
 			'bower_components/angular/angular.js',
 			'bower_components/angular-mocks/angular-mocks.js',
 			'bower_components/angular-data/dist/angular-data.js',
-			'src/angular-data-mocks.js',
+			'dist/angular-data-mocks.js',
 			'karma.start.js',
 			'test/testApp.js',
 			'test/test.js'

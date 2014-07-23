@@ -29,12 +29,19 @@ describe('test', function () {
       }
     ]);
 
-    DS.expectFind('user', 5).respond({
+    DS.when('find', 'post', 1).respond({
+      id: 1
+    });
+
+    DSHttpAdapter.expectGET('test.com').respond({
       name: 'John',
       id: 5
     });
 
-    assert.equal(1, 1, '1 should equal 1');
+    DS.expectFind('user', 5).respond({
+      name: 'John',
+      id: 5
+    });
 
     $scope.test().then(function (user) {
       assert.deepEqual(user, {
@@ -47,5 +54,7 @@ describe('test', function () {
     DS.flush();
 
     assert.deepEqual($scope.injected, { test: 'test' });
+
+    assert.equal(DS.find.callCount, 3);
   });
 });
