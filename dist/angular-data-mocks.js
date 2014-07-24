@@ -2,7 +2,7 @@
 /**
  * @author Jason Dobry <jason.dobry@gmail.com>
  * @file angular-data-mocks.js
- * @version 0.5.3 - Homepage <https://github.com/jmdobry/angular-data-mocks>
+ * @version 0.5.4 - Homepage <https://github.com/jmdobry/angular-data-mocks>
  * @copyright (c) 2014 Jason Dobry <https://github.com/jmdobry/>
  * @license MIT <https://github.com/jmdobry/angular-data-mocks/blob/master/LICENSE>
  *
@@ -1211,7 +1211,7 @@ function DSProvider() {
         var def = DS.definitions[definition.name];
 
         // Create the wrapper class for the new resource
-        def.class = definition.name[0].toUpperCase() + definition.name.substring(1);
+        def.class = DSUtils.pascalCase(definition.name);
         eval('function ' + def.class + '() {}');
         def[def.class] = eval(def.class);
 
@@ -1275,7 +1275,7 @@ module.exports = DSProvider;
  * @description
  * Fake angular-data implementation suitable for unit testing angular applications that use the `angular-data.DS` module.
  *
- * __Version:__ 0.5.3
+ * __Version:__ 0.5.4
  *
  * __angular-data-mocks requires SinonJS to be loaded in order to work.__
  *
@@ -1460,7 +1460,7 @@ module.exports = DSProvider;
     'angular-data.DSHttpAdapterMock',
     'angular-data.DSLocalStorageAdapterMock'
   ])
-    .value('version', '0.5.3');
+    .value('version', '0.5.4');
 
 })(window, window.angular);
 

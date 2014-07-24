@@ -493,7 +493,7 @@ function DSProvider() {
         var def = DS.definitions[definition.name];
 
         // Create the wrapper class for the new resource
-        def.class = definition.name[0].toUpperCase() + definition.name.substring(1);
+        def.class = DSUtils.pascalCase(definition.name);
         eval('function ' + def.class + '() {}');
         def[def.class] = eval(def.class);
 
