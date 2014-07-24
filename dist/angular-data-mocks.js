@@ -2,7 +2,7 @@
 /**
  * @author Jason Dobry <jason.dobry@gmail.com>
  * @file angular-data-mocks.js
- * @version 0.5.4 - Homepage <https://github.com/jmdobry/angular-data-mocks>
+ * @version 0.5.5 - Homepage <https://github.com/jmdobry/angular-data-mocks>
  * @copyright (c) 2014 Jason Dobry <https://github.com/jmdobry/>
  * @license MIT <https://github.com/jmdobry/angular-data-mocks/blob/master/LICENSE>
  *
@@ -756,10 +756,13 @@ function DSProvider() {
   var methodsToProxy = [
     'bindAll',
     'bindOne',
+    'changes',
     'create',
     'createInstance',
     'destroy',
     'destroyAll',
+    'eject',
+    'ejectAll',
     'filter',
     'find',
     'findAll',
@@ -1275,7 +1278,7 @@ module.exports = DSProvider;
  * @description
  * Fake angular-data implementation suitable for unit testing angular applications that use the `angular-data.DS` module.
  *
- * __Version:__ 0.5.4
+ * __Version:__ 0.5.5
  *
  * __angular-data-mocks requires SinonJS to be loaded in order to work.__
  *
@@ -1460,7 +1463,7 @@ module.exports = DSProvider;
     'angular-data.DSHttpAdapterMock',
     'angular-data.DSLocalStorageAdapterMock'
   ])
-    .value('version', '0.5.4');
+    .value('version', '0.5.5');
 
 })(window, window.angular);
 

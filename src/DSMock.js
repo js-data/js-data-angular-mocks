@@ -38,10 +38,13 @@ function DSProvider() {
   var methodsToProxy = [
     'bindAll',
     'bindOne',
+    'changes',
     'create',
     'createInstance',
     'destroy',
     'destroyAll',
+    'eject',
+    'ejectAll',
     'filter',
     'find',
     'findAll',
