@@ -21,7 +21,8 @@ module.exports = function (grunt) {
       dist: ['dist/']
     },
     jshint: {
-      all: ['Gruntfile.js', 'src/**/*.js', 'test/*.js'],
+      all: ['Gruntfile.js', 'src/**/*.js'],
+      test: ['test/**/*.js'],
       jshintrc: '.jshintrc'
     },
     watch: {
