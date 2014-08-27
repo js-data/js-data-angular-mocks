@@ -21,8 +21,9 @@ function DSProvider() {
     'bindAll',
     'bindOne',
     'changes',
-    'defineResource',
+    'compute',
     'createInstance',
+    'defineResource',
     'digest',
     'eject',
     'ejectAll',
@@ -32,6 +33,9 @@ function DSProvider() {
     'inject',
     'lastModified',
     'lastSaved',
+    'link',
+    'linkAll',
+    'linkInverse',
     'previous'
   ];
 
@@ -39,6 +43,7 @@ function DSProvider() {
     'bindAll',
     'bindOne',
     'changes',
+    'compute',
     'create',
     'createInstance',
     'destroy',
@@ -53,6 +58,9 @@ function DSProvider() {
     'inject',
     'lastModified',
     'lastSaved',
+    'link',
+    'linkAll',
+    'linkInverse',
     'loadRelations',
     'previous',
     'refresh',
