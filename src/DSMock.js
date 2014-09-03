@@ -36,6 +36,7 @@ function DSProvider() {
     'link',
     'linkAll',
     'linkInverse',
+    'unlinkInverse',
     'previous'
   ];
 
@@ -61,6 +62,7 @@ function DSProvider() {
     'link',
     'linkAll',
     'linkInverse',
+    'unlinkInverse',
     'loadRelations',
     'previous',
     'refresh',

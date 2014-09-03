@@ -1,13 +1,13 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /**
  * @author Jason Dobry <jason.dobry@gmail.com>
  * @file angular-data-mocks.js
- * @version 0.6.0 - Homepage <https://github.com/jmdobry/angular-data-mocks>
+ * @version 1.0.0-rc.1 - Homepage <https://github.com/jmdobry/angular-data-mocks>
  * @copyright (c) 2014 Jason Dobry <https://github.com/jmdobry/>
  * @license MIT <https://github.com/jmdobry/angular-data-mocks/blob/master/LICENSE>
  *
  * @overview A mock of angular-data for testing purposes.
  */
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 
 function DSHttpAdapterProvider() {
   var expectations = [];
@@ -754,6 +754,7 @@ function DSProvider() {
     'link',
     'linkAll',
     'linkInverse',
+    'unlinkInverse',
     'previous'
   ];
 
@@ -779,6 +780,7 @@ function DSProvider() {
     'link',
     'linkAll',
     'linkInverse',
+    'unlinkInverse',
     'loadRelations',
     'previous',
     'refresh',
@@ -1286,7 +1288,7 @@ module.exports = DSProvider;
  * @description
  * Fake angular-data implementation suitable for unit testing angular applications that use the `angular-data.DS` module.
  *
- * __Version:__ 0.6.0
+ * __Version:__ 1.0.0-rc.1
  *
  * __angular-data-mocks requires SinonJS to be loaded in order to work.__
  *
@@ -1472,7 +1474,7 @@ module.exports = DSProvider;
     'angular-data.DSHttpAdapterMock',
     'angular-data.DSLocalStorageAdapterMock'
   ])
-    .value('version', '0.6.0');
+    .value('version', '1.0.0-rc.1');
 
 })(window, window.angular);
 

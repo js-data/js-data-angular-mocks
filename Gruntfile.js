@@ -8,7 +8,7 @@
 module.exports = function (grunt) {
   'use strict';
 
-  require('load-grunt-tasks')(grunt);
+  require('jit-grunt')(grunt);
   require('time-grunt')(grunt);
 
   var pkg = grunt.file.readJSON('package.json');
