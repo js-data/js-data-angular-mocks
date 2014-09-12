@@ -82,7 +82,7 @@ function DSProvider() {
     }
   }
 
-  this.$get = ['DSMockUtils', 'DSUtils', 'DSErrors', '$log', function (DSMockUtils, DSUtils, DSErrors, $log) {
+  this.$get = ['DSMockUtils', 'DSUtils', 'DSErrors', '$log', '$rootScope', function (DSMockUtils, DSUtils, DSErrors, $log, $rootScope) {
 
     var MockDSExpectation = DSMockUtils.MockDSExpectation;
     var defaults = {
