@@ -2,7 +2,7 @@
 /**
  * @author Jason Dobry <jason.dobry@gmail.com>
  * @file angular-data-mocks.js
- * @version 1.0.0-rc.2 - Homepage <https://github.com/jmdobry/angular-data-mocks>
+ * @version 1.0.0 - Homepage <https://github.com/jmdobry/angular-data-mocks>
  * @copyright (c) 2014 Jason Dobry <https://github.com/jmdobry/>
  * @license MIT <https://github.com/jmdobry/angular-data-mocks/blob/master/LICENSE>
  *
@@ -1292,7 +1292,7 @@ module.exports = DSProvider;
  * @description
  * Fake angular-data implementation suitable for unit testing angular applications that use the `angular-data.DS` module.
  *
- * __Version:__ 1.0.0-rc.2
+ * __Version:__ 1.0.0
  *
  * __angular-data-mocks requires SinonJS to be loaded in order to work.__
  *
@@ -1478,7 +1478,7 @@ module.exports = DSProvider;
     'angular-data.DSHttpAdapterMock',
     'angular-data.DSLocalStorageAdapterMock'
   ])
-    .value('version', '1.0.0-rc.2');
+    .value('version', '1.0.0');
 
 })(window, window.angular);
 

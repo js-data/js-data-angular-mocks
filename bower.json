@@ -2,7 +2,7 @@
   "author": "Jason Dobry",
   "name": "angular-data-mocks",
   "description": "A mock of angular-data for testing purposes.",
-  "version": "1.0.0-rc.2",
+  "version": "1.0.0",
   "homepage": "https://github.com/jmdobry/angular-data-mocks/",
   "repository": {
     "type": "git",
@@ -23,11 +23,11 @@
     "karma.start.js"
   ],
   "devDependencies": {
-    "angular": "1.2.22",
-    "angular-mocks": "1.2.22",
-    "angular-data": "1.0.0-rc.1"
+    "angular": "1.2.25",
+    "angular-mocks": "1.2.25",
+    "angular-data": "1.0.0"
   },
   "resolutions": {
-    "angular": "1.2.22"
+    "angular": "1.2.25"
   }
 }
