@@ -35,6 +35,8 @@ module.exports = function (grunt) {
     uglify: {
       dist: {
         options: {
+          sourceMap: true,
+          sourceMapName: 'dist/js-data-angular-mocks.min.map',
           banner: '/*!\n' +
           '* js-data-angular-mocks\n' +
           '* @version <%= pkg.version %> - Homepage <https://github.com/js-data/js-data-angular-mocks>\n' +
