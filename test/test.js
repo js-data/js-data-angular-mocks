@@ -33,11 +33,6 @@ describe('test', function () {
       id: 1
     });
 
-    DSHttpAdapter.expectGET('test.com').respond({
-      name: 'John',
-      id: 5
-    });
-
     DS.expectFind('user', 4).respond({
       name: 'Sally',
       id: 4

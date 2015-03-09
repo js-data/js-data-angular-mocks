@@ -1,9 +1,9 @@
 /*
- * angular-data-mocks
- * http://github.com/jmdobry/angular-data-mocks
+ * js-data-angular-mocks
+ * http://github.com/js-data/js-data-angular-mocks
  *
- * Copyright (c) 2014 Jason Dobry <http://jmdobry.github.io/angular-data-mocks>
- * Licensed under the MIT license. <https://github.com/jmdobry/angular-data-mocks/blob/master/LICENSE>
+ * Copyright (c) 2014 Jason Dobry <http://js-data.github.io/js-data-angular-mocks>
+ * Licensed under the MIT license. <https://github.com/js-data/js-data-angular-mocks/blob/master/LICENSE>
  */
 module.exports = function (grunt) {
   'use strict';
@@ -11,7 +11,15 @@ module.exports = function (grunt) {
   require('jit-grunt')(grunt);
   require('time-grunt')(grunt);
 
+  var webpack = require('webpack');
   var pkg = grunt.file.readJSON('package.json');
+  var banner = 'js-data-angular-mocks\n' +
+    '@version ' + pkg.version + ' - Homepage <https://github.com/js-data/js-data-angular-mocks>\n' +
+    '@author Jason Dobry <jason.dobry@gmail.com>\n' +
+    '@copyright (c) 2014-2015 Jason Dobry \n' +
+    '@license MIT <https://github.com/js-data/js-data-angular-mocks/blob/master/LICENSE>\n' +
+    '\n' +
+    '@overview A mock of js-data & js-data-angular for testing purposes.';
 
   // Project configuration.
   grunt.initConfig({
@@ -20,11 +28,6 @@ module.exports = function (grunt) {
       coverage: ['coverage/'],
       dist: ['dist/']
     },
-    jshint: {
-      all: ['Gruntfile.js', 'src/**/*.js'],
-      test: ['test/**/*.js'],
-      jshintrc: '.jshintrc'
-    },
     watch: {
       files: ['src/**/*.js'],
       tasks: ['build']
@@ -32,18 +35,18 @@ module.exports = function (grunt) {
     uglify: {
       dist: {
         options: {
-          banner: '/**\n' +
-            '* @author Jason Dobry <jason.dobry@gmail.com>\n' +
-            '* @file angular-data-mocks.min.js\n' +
-            '* @version <%= pkg.version %> - Homepage <https://github.com/jmdobry/angular-data-mocks>\n' +
-            '* @copyright (c) 2014 Jason Dobry <https://github.com/jmdobry/>\n' +
-            '* @license MIT <https://github.com/jmdobry/angular-data-mocks/blob/master/LICENSE>\n' +
-            '*\n' +
-            '* @overview A mock of angular-data for testing purposes.\n' +
-            '*/\n'
+          banner: '/*!\n' +
+          '* js-data-angular-mocks\n' +
+          '* @version <%= pkg.version %> - Homepage <https://github.com/js-data/js-data-angular-mocks>\n' +
+          '* @author Jason Dobry <jason.dobry@gmail.com>\n' +
+          '* @copyright (c) 2014-2015 Jason Dobry <https://github.com/js-data/>\n' +
+          '* @license MIT <https://github.com/js-data/js-data-angular-mocks/blob/master/LICENSE>\n' +
+          '*\n' +
+          '* @overview A mock of js-data & js-data-angular for testing purposes.\n' +
+          '*/\n'
         },
         files: {
-          'dist/angular-data-mocks.min.js': ['dist/angular-data-mocks.js']
+          'dist/js-data-angular-mocks.min.js': ['dist/js-data-angular-mocks.js']
         }
       }
     },
@@ -64,9 +67,12 @@ module.exports = function (grunt) {
           files: [
             'bower_components/angular/angular.js',
             'bower_components/angular-mocks/angular-mocks.js',
-            'dist/angular-data.min.js',
-            'test/integration/**/*.js',
-            'karma.start.js'
+            'bower_components/js-data/dist/js-data.js',
+            'bower_components/js-data-angular/dist/js-data-angular.js',
+            'dist/js-data-angular-mocks.min.js',
+            'karma.start.js',
+            'test/testApp.js',
+            'test/test.js'
           ]
         }
       },
@@ -82,8 +88,8 @@ module.exports = function (grunt) {
 
     copy: {
       dist: {
-        src: 'dist/angular-data-mocks.js',
-        dest: 'dist/angular-data-mocks.js',
+        src: 'dist/js-data-angular-mocks.js',
+        dest: 'dist/js-data-angular-mocks.js',
         options: {
           process: function (content) {
             return content.replace(/<%= pkg\.version %>/gi, pkg.version);
@@ -91,20 +97,53 @@ module.exports = function (grunt) {
         }
       }
     },
-    browserify: {
+    webpack: {
       dist: {
-        files: {
-          'dist/angular-data-mocks.js': ['src/index.js']
-        }
+        entry: './src/index.js',
+        output: {
+          filename: './dist/js-data-angular-mocks.js',
+          libraryTarget: 'umd',
+          library: 'jsDataAngularMocksModuleName'
+        },
+        externals: {
+          'js-data': {
+            amd: 'js-data',
+            commonjs: 'js-data',
+            commonjs2: 'js-data',
+            root: 'JSData'
+          },
+          'js-data-angular': {
+            amd: 'js-data-angular',
+            commonjs: 'js-data-angular',
+            commonjs2: 'js-data-angular',
+            root: 'jsDataAngularModuleName'
+          },
+          'sinon': 'sinon',
+          'angular': 'angular'
+        },
+        module: {
+          loaders: [
+            { test: /(src)(.+)\.js$/, exclude: /node_modules/, loader: 'babel-loader?blacklist=useStrict' }
+          ],
+          preLoaders: [
+            {
+              test: /(src)(.+)\.js$|(test)(.+)\.js$/, // include .js files
+              exclude: /node_modules/, // exclude any and all files in the node_modules folder
+              loader: "jshint-loader?failOnHint=true"
+            }
+          ]
+        },
+        plugins: [
+          new webpack.BannerPlugin(banner)
+        ]
       }
     }
   });
 
-  grunt.registerTask('test', ['clean:coverage', 'karma:dev']);
+  grunt.registerTask('test', ['build', 'karma:ci', 'karma:min']);
   grunt.registerTask('build', [
     'clean',
-    'jshint',
-    'browserify',
+    'webpack',
     'copy',
     'uglify:dist'
   ]);

@@ -1,7 +1,6 @@
 {
 	"node": false,
 	"browser": true,
-	"es5": true,
 	"esnext": true,
 	"bitwise": true,
 	"camelcase": true,
@@ -16,14 +15,13 @@
 	"regexp": true,
 	"undef": true,
 	"unused": true,
-	"strict": true,
+	"strict": false,
 	"trailing": true,
 	"smarttabs": true,
 	"predef": [
 		"inject",
 		"describe",
 		"it",
-		"sinon",
 		"console",
 		"DS",
 		"beforeEach",
@@ -31,7 +29,6 @@
 		"assert",
 		"require",
 		"module",
-		"exports",
-		"angular"
+		"exports"
 	]
 }

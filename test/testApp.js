@@ -1,4 +1,4 @@
-angular.module('testApp', ['angular-data.DS'])
+angular.module('testApp', ['js-data'])
   .service('User', function (DS) {
     return DS.defineResource('user');
   })
@@ -14,8 +14,6 @@ angular.module('testApp', ['angular-data.DS'])
           }
         }
       });
-
-      DSHttpAdapter.GET('test.com');
 
       $scope.injected = DS.inject('user', {
         name: 'Sally',
