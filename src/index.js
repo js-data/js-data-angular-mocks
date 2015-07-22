@@ -55,14 +55,15 @@ class DS {
       'bindOne',
       'changes',
       'changeHistory',
+      'clear',
       'compute',
-      'createInstance',
       'digest',
       'eject',
       'ejectAll',
       'filter',
       'get',
       'getAll',
+      'getAdapterName',
       'getAdapter',
       'hasChanges',
       'inject',
@@ -77,18 +78,22 @@ class DS {
       'previous',
       'unlinkInverse'
     ];
-
-    class Resource {
-      constructor(utils, options) {
-        utils.deepMixIn(this, options);
-
-        if ('endpoint' in options) {
-          this.endpoint = options.endpoint;
-        } else {
-          this.endpoint = this.name;
-        }
-      }
-    }
+    let instanceMethods = [
+      'compute',
+      'eject',
+      'refresh',
+      'save',
+      'update',
+      'destroy',
+      'loadRelations',
+      'changeHistory',
+      'changes',
+      'hasChanges',
+      'lastModified',
+      'lastSaved',
+      'previous',
+      'revert'
+    ];
 
     this.$get = ['DSMockUtils', 'DSUtils', 'DSErrors', '$log', '$rootScope', function (DSMockUtils, DSUtils, DSErrors, $log, $rootScope) {
 
@@ -174,8 +179,55 @@ class DS {
         utils: DSUtils,
         errors: DSErrors,
 
+        createInstance(resourceName, attrs, options) {
+          let definition = this.definitions[resourceName];
+          let item;
+
+          attrs = attrs || {};
+
+          options = DSUtils._(definition, options);
+
+          // lifecycle
+          options.beforeCreateInstance(options, attrs);
+
+          // grab instance constructor function from Resource definition
+          let Constructor = definition[definition.class];
+
+          // create instance
+          item = new Constructor();
+
+          // add default values
+          if (options.defaultValues) {
+            DSUtils.deepMixIn(item, options.defaultValues);
+          }
+          DSUtils.deepMixIn(item, attrs);
+
+          // compute computed properties
+          if (definition.computed) {
+            definition.compute(item);
+          }
+          // lifecycle
+          options.afterCreateInstance(options, item);
+          return item;
+        },
+
         defineResource(definition) {
           let DS = this;
+
+          function Resource(options) {
+            this.defaultValues = {};
+            this.methods = {};
+            this.computed = {};
+            DSUtils.deepMixIn(this, options);
+            let parent = DS.defaults;
+            if (definition.extends && definitions[definition.extends]) {
+              parent = definitions[definition.extends];
+            }
+            DSUtils.fillIn(this.defaultValues, parent.defaultValues);
+            DSUtils.fillIn(this.methods, parent.methods);
+            DSUtils.fillIn(this.computed, parent.computed);
+            this.endpoint = ('endpoint' in options) ? options.endpoint : this.name;
+          }
 
           if (DSUtils.isString(definition)) {
             definition = definition.replace(/\s/gi, '');
@@ -185,13 +237,58 @@ class DS {
           }
 
           try {
-            // Inherit from global defaults
-            Resource.prototype = DS.defaults;
-            DS.definitions[definition.name] = new Resource(DSUtils, definition);
+            // Resources can inherit from another resource instead of inheriting directly from the data store defaults.
+            if (definition.extends && definitions[definition.extends]) {
+              // Inherit from another resource
+              Resource.prototype = definitions[definition.extends];
+            } else {
+              // Inherit from global defaults
+              Resource.prototype = DS.defaults;
+            }
+            definitions[definition.name] = new Resource(definition);
 
-            let def = DS.definitions[definition.name];
+            var def = definitions[definition.name];
+
+            def.getResource = resourceName => DS.definitions[resourceName];
 
             def.n = def.name;
+
+            // Setup nested parent configuration
+            if (def.relations) {
+              def.relationList = [];
+              def.relationFields = [];
+              DSUtils.forOwn(def.relations, (relatedModels, type) => {
+                DSUtils.forOwn(relatedModels, (defs, relationName) => {
+                  if (!DSUtils._a(defs)) {
+                    relatedModels[relationName] = [defs];
+                  }
+                  DSUtils.forEach(relatedModels[relationName], d => {
+                    d.type = type;
+                    d.relation = relationName;
+                    d.name = def.name;
+                    def.relationList.push(d);
+                    if (d.localField) {
+                      def.relationFields.push(d.localField);
+                    }
+                  });
+                });
+              });
+              if (def.relations.belongsTo) {
+                DSUtils.forOwn(def.relations.belongsTo, (relatedModel, modelName) => {
+                  DSUtils.forEach(relatedModel, relation => {
+                    if (relation.parent) {
+                      def.parent = modelName;
+                      def.parentKey = relation.localKey;
+                      def.parentField = relation.localField;
+                    }
+                  });
+                });
+              }
+              if (typeof Object.freeze === 'function') {
+                Object.freeze(def.relations);
+                Object.freeze(def.relationList);
+              }
+            }
 
             // Create the wrapper class for the new resource
             var _class = def['class'] = DSUtils.pascalCase(def.name);
@@ -215,29 +312,100 @@ class DS {
               };
             }
 
-            // Apply developer-defined methods
-            if (def.methods) {
-              DSUtils.deepMixIn(def[def.class].prototype, def.methods);
-            }
+            // Apply developer-defined instance methods
+            DSUtils.forOwn(def.methods, (fn, m) => {
+              def[_class].prototype[m] = fn;
+            });
 
+            /**
+             * var user = User.createInstance({ id: 1 });
+             * user.set('foo', 'bar');
+             */
             def[_class].prototype.set = function (key, value) {
               DSUtils.set(this, key, value);
-              var observer = DS.s[def.n].observers[this[def.idAttribute]];
-              if (observer && !DSUtils.observe.hasObjectObserve) {
-                observer.deliver();
-              } else {
-                DS.compute(def.n, this);
+              def.compute(this);
+              if (def.instanceEvents) {
+                setTimeout(() => {
+                  this.emit('DS.change', def, this);
+                }, 0);
               }
+              def.handleChange(this);
               return this;
             };
 
+            /**
+             * var user = User.createInstance({ id: 1 });
+             * user.get('id'); // 1
+             */
             def[_class].prototype.get = function (key) {
               return DSUtils.get(this, key);
+            };
+
+            if (def.instanceEvents) {
+              DSUtils.Events(def[_class].prototype);
+            }
+
+            // Setup the relation links
+            DSUtils.applyRelationGettersToTarget(DS, def, def[_class].prototype);
+
+            let parentOmit = null;
+            if (!def.hasOwnProperty('omit')) {
+              parentOmit = def.omit;
+              def.omit = [];
+            } else {
+              parentOmit = DS.defaults.omit;
+            }
+            def.omit = def.omit.concat(parentOmit || []);
+
+            // Prepare for computed properties
+            DSUtils.forOwn(def.computed, (fn, field) => {
+              if (DSUtils.isFunction(fn)) {
+                def.computed[field] = [fn];
+                fn = def.computed[field];
+              }
+              if (def.methods && field in def.methods) {
+                def.errorFn(`Computed property "${field}" conflicts with previously defined prototype method!`);
+              }
+              def.omit.push(field);
+              var deps;
+              if (fn.length === 1) {
+                let match = fn[0].toString().match(/function.*?\(([\s\S]*?)\)/);
+                deps = match[1].split(',');
+                def.computed[field] = deps.concat(fn);
+                fn = def.computed[field];
+                if (deps.length) {
+                  def.errorFn('Use the computed property array syntax for compatibility with minified code!');
+                }
+              }
+              deps = fn.slice(0, fn.length - 1);
+              DSUtils.forEach(deps, (val, index) => {
+                deps[index] = val.trim();
+              });
+              fn.deps = DSUtils.filter(deps, dep => {
+                return !!dep;
+              });
+            });
+
+            // add instance proxies of DS methods
+            DSUtils.forEach(instanceMethods, name => {
+              def[_class].prototype[`DS${DSUtils.pascalCase(name)}`] = function (...args) {
+                args.unshift(this[def.idAttribute] || this);
+                args.unshift(def.name);
+                return DS[name].apply(DS, args);
+              };
+            });
+
+            // manually add instance proxy for DS#create
+            def[_class].prototype.DSCreate = function (...args) {
+              args.unshift(this);
+              args.unshift(def.name);
+              return DS.create.apply(DS, args);
             };
 
             // Initialize store data for the new resource
             DS.store[def.name] = {
               collection: [],
+              expiresHeap: new DSUtils.BinaryHeap(x => x.expires, (x, y) => x.item === y),
               completedQueries: {},
               queryData: {},
               pendingQueries: {},
@@ -251,27 +419,109 @@ class DS {
               collectionModified: 0
             };
 
-            // Proxy DS methods with shorthand ones
-            let fns = ['registerAdapter', 'getAdapter', 'is'];
-            for (var key in DS) {
+            let resource = DS.store[def.name];
+
+            // proxy DS methods with shorthand ones
+            let fns = ['registerAdapter', 'getAdapterName', 'getAdapter', 'is', '!clear'];
+            for (let key in DS) {
               if (typeof DS[key] === 'function') {
                 fns.push(key);
               }
             }
 
+            /**
+             * Create the Resource shorthands that proxy DS methods. e.g.
+             *
+             * var store = new JSData.DS();
+             * var User = store.defineResource('user');
+             *
+             * store.update(resourceName, id, attrs[, options]) // DS method
+             * User.update(id, attrs[, options]) // DS method proxied on a Resource
+             */
             DSUtils.forEach(fns, key => {
               let k = key;
+              if (k[0] === '!') {
+                return;
+              }
               if (DS[k].shorthand !== false) {
                 def[k] = (...args) => {
-                  args.unshift(def.n);
+                  args.unshift(def.name);
                   return DS[k].apply(DS, args);
+                };
+                def[k].before = fn => {
+                  let orig = def[k];
+                  def[k] = (...args) => {
+                    return orig.apply(def, fn.apply(def, args) || args);
+                  };
                 };
               } else {
                 def[k] = (...args) => DS[k].apply(DS, args);
               }
             });
 
+            def.beforeValidate = DSUtils.promisify(def.beforeValidate);
+            def.validate = DSUtils.promisify(def.validate);
+            def.afterValidate = DSUtils.promisify(def.afterValidate);
+            def.beforeCreate = DSUtils.promisify(def.beforeCreate);
+            def.afterCreate = DSUtils.promisify(def.afterCreate);
+            def.beforeUpdate = DSUtils.promisify(def.beforeUpdate);
+            def.afterUpdate = DSUtils.promisify(def.afterUpdate);
+            def.beforeDestroy = DSUtils.promisify(def.beforeDestroy);
+            def.afterDestroy = DSUtils.promisify(def.afterDestroy);
+
+            let defaultAdapter;
+            if (def.hasOwnProperty('defaultAdapter')) {
+              defaultAdapter = def.defaultAdapter;
+            }
+
+            // setup "actions"
+            DSUtils.forOwn(def.actions, (action, name) => {
+              if (def[name] && !def.actions[name]) {
+                throw new Error(`Cannot override existing method "${name}"!`);
+              }
+              action.request = action.request || (config => config);
+              action.response = action.response || (response => response);
+              action.responseError = action.responseError || (err => DSUtils.Promise.reject(err));
+              def[name] = function (id, options) {
+                if (DSUtils._o(id)) {
+                  options = id;
+                }
+                options = options || {};
+                let adapter = def.getAdapter(action.adapter || defaultAdapter || 'http');
+                let config = DSUtils.deepMixIn({}, action);
+                if (!options.hasOwnProperty('endpoint') && config.endpoint) {
+                  options.endpoint = config.endpoint;
+                }
+                if (typeof options.getEndpoint === 'function') {
+                  config.url = options.getEndpoint(def, options);
+                } else {
+                  let args = [options.basePath || adapter.defaults.basePath || def.basePath, adapter.getEndpoint(def, DSUtils._sn(id) ? id : null, options)];
+                  if (DSUtils._sn(id)) {
+                    args.push(id);
+                  }
+                  args.push(action.pathname || name);
+                  config.url = DSUtils.makePath.apply(null, args);
+                }
+                config.method = config.method || 'GET';
+                DSUtils.deepMixIn(config, options);
+                return new DSUtils.Promise(r => r(config))
+                  .then(options.request || action.request)
+                  .then(config => adapter.HTTP(config))
+                  .then(options.response || action.response, options.responseError || action.responseError);
+              };
+            });
+
+            // mix in events
             DSUtils.Events(def);
+
+            def.handleChange = data => {
+              resource.collectionModified = DSUtils.updateTimestamp(resource.collectionModified);
+              if (def.notify) {
+                setTimeout(() => {
+                  def.emit('DS.change', def, data);
+                }, 0);
+              }
+            };
 
             return def;
           } catch (err) {
