@@ -185,11 +185,6 @@ class DS {
 
           attrs = attrs || {};
 
-          options = DSUtils._(definition, options);
-
-          // lifecycle
-          options.beforeCreateInstance(options, attrs);
-
           // grab instance constructor function from Resource definition
           let Constructor = definition[definition.class];
 
@@ -206,8 +201,6 @@ class DS {
           if (definition.computed) {
             definition.compute(item);
           }
-          // lifecycle
-          options.afterCreateInstance(options, item);
           return item;
         },
 
