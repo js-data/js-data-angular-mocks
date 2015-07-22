@@ -1,6 +1,6 @@
 /*!
  * js-data-angular-mocks
- * @version 2.0.0 - Homepage <https://github.com/js-data/js-data-angular-mocks>
+ * @version 2.1.0 - Homepage <https://github.com/js-data/js-data-angular-mocks>
  * @author Jason Dobry <jason.dobry@gmail.com>
  * @copyright (c) 2014-2015 Jason Dobry 
  * @license MIT <https://github.com/js-data/js-data-angular-mocks/blob/master/LICENSE>
@@ -103,8 +103,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var requests = [];
 	  var responses = [];
 	  var stubs = {};
-	  var asyncMethods = ["create", "destroy", "destroyAll", "find", "findAll", "loadRelations", "reap", "refresh", "save", "update", "updateAll"];
-	  var syncMethods = ["bindAll", "bindOne", "changes", "changeHistory", "compute", "createInstance", "digest", "eject", "ejectAll", "filter", "get", "getAdapter", "hasChanges", "inject", "is", "lastModified", "lastSaved", "link", "linkAll", "linkInverse", "registerAdapter", "previous", "unlinkInverse"];
+	  var asyncMethods = ["create", "destroy", "destroyAll", "find", "findAll", "loadRelations", "reap", "refresh", "refreshAll", "save", "update", "updateAll"];
+	  var syncMethods = ["bindAll", "bindOne", "changes", "changeHistory", "compute", "createInstance", "digest", "eject", "ejectAll", "filter", "get", "getAll", "getAdapter", "hasChanges", "inject", "is", "lastModified", "lastSaved", "link", "linkAll", "linkInverse", "registerAdapter", "revert", "previous", "unlinkInverse"];
 
 	  var Resource = function Resource(utils, options) {
 	    _classCallCheck(this, Resource);
@@ -331,6 +331,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	              }
 	            });
 
+	            DSUtils.Events(def);
+
 	            return {
 	              v: def
 	            };
@@ -353,6 +355,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    angular.extend(DS, stubs);
 
 	    sinon.spy(DS, "defineResource");
+
+	    DSUtils.Events(DS);
 
 	    return DS;
 	  }];
@@ -465,7 +469,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }];
 	};
 
-	angular.module("js-data-mocks", []).value("version", "2.0.0").service("DSMockUtils", ["$q", function ($q) {
+	angular.module("js-data-mocks", ["js-data"]).value("version", "2.1.0").service("DSMockUtils", ["$q", function ($q) {
 	  var MockDSExpectation = (function () {
 	    function MockDSExpectation(method, args) {
 	      _classCallCheck(this, MockDSExpectation);
@@ -625,6 +629,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}]).provider("DS", DS).provider("DSHttpAdapter", DSHttpAdapter);
 
 	module.exports = "js-data-mocks";
+	module.exports.name = "js-data-mocks";
 
 /***/ },
 /* 1 */

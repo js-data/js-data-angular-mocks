@@ -45,6 +45,7 @@ class DS {
       'loadRelations',
       'reap',
       'refresh',
+      'refreshAll',
       'save',
       'update',
       'updateAll'
@@ -61,6 +62,7 @@ class DS {
       'ejectAll',
       'filter',
       'get',
+      'getAll',
       'getAdapter',
       'hasChanges',
       'inject',
@@ -71,6 +73,7 @@ class DS {
       'linkAll',
       'linkInverse',
       'registerAdapter',
+      'revert',
       'previous',
       'unlinkInverse'
     ];
@@ -268,6 +271,8 @@ class DS {
               }
             });
 
+            DSUtils.Events(def);
+
             return def;
           } catch (err) {
             $log.error(err);
@@ -283,6 +288,8 @@ class DS {
       angular.extend(DS, stubs);
 
       sinon.spy(DS, 'defineResource');
+
+      DSUtils.Events(DS);
 
       return DS;
     }];
@@ -391,7 +398,7 @@ class DSHttpAdapter {
   }
 }
 
-angular.module('js-data-mocks', [])
+angular.module('js-data-mocks', ['js-data'])
   .value('version', '<%= pkg.version %>')
   .service('DSMockUtils', ['$q', $q => {
 
@@ -521,4 +528,5 @@ angular.module('js-data-mocks', [])
   .provider('DS', DS)
   .provider('DSHttpAdapter', DSHttpAdapter);
 
-export default 'js-data-mocks';
+module.exports = 'js-data-mocks';
+module.exports.name = 'js-data-mocks';
