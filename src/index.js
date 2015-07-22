@@ -185,6 +185,8 @@ class DS {
 
           attrs = attrs || {};
 
+          options = DSUtils._(definition, options);
+
           // grab instance constructor function from Resource definition
           let Constructor = definition[definition.class];
 
