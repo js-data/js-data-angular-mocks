@@ -1,6 +1,6 @@
 /*!
  * js-data-angular-mocks
- * @version 3.0.1 - Homepage <https://github.com/js-data/js-data-angular-mocks>
+ * @version 3.0.2 - Homepage <https://github.com/js-data/js-data-angular-mocks>
  * @author Jason Dobry <jason.dobry@gmail.com>
  * @copyright (c) 2014-2015 Jason Dobry 
  * @license MIT <https://github.com/js-data/js-data-angular-mocks/blob/master/LICENSE>
@@ -245,8 +245,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	          this.computed = {};
 	          DSUtils.deepMixIn(this, options);
 	          var parent = DS.defaults;
-	          if (definition['extends'] && definitions[definition['extends']]) {
-	            parent = definitions[definition['extends']];
+	          if (definition['extends'] && DS.definitions[definition['extends']]) {
+	            parent = DS.definitions[definition['extends']];
 	          }
 	          DSUtils.fillIn(this.defaultValues, parent.defaultValues);
 	          DSUtils.fillIn(this.methods, parent.methods);
@@ -268,16 +268,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	          var _ret = (function () {
 	            // Resources can inherit from another resource instead of inheriting directly from the data store defaults.
-	            if (definition['extends'] && definitions[definition['extends']]) {
+	            if (definition['extends'] && DS.definitions[definition['extends']]) {
 	              // Inherit from another resource
-	              Resource.prototype = definitions[definition['extends']];
+	              Resource.prototype = DS.definitions[definition['extends']];
 	            } else {
 	              // Inherit from global defaults
 	              Resource.prototype = DS.defaults;
 	            }
-	            definitions[definition.name] = new Resource(definition);
+	            DS.definitions[definition.name] = new Resource(definition);
 
-	            def = definitions[definition.name];
+	            def = DS.definitions[definition.name];
 
 	            def.getResource = function (resourceName) {
 	              return DS.definitions[resourceName];
@@ -725,7 +725,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }];
 	};
 
-	angular.module('js-data-mocks', ['js-data']).value('version', '3.0.1').service('DSMockUtils', ['$q', function ($q) {
+	angular.module('js-data-mocks', ['js-data']).value('version', '3.0.2').service('DSMockUtils', ['$q', function ($q) {
 	  var MockDSExpectation = (function () {
 	    function MockDSExpectation(method, args) {
 	      _classCallCheck(this, MockDSExpectation);
