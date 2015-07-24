@@ -1,6 +1,6 @@
 /*!
  * js-data-angular-mocks
- * @version 3.0.3 - Homepage <https://github.com/js-data/js-data-angular-mocks>
+ * @version 3.1.0 - Homepage <https://github.com/js-data/js-data-angular-mocks>
  * @author Jason Dobry <jason.dobry@gmail.com>
  * @copyright (c) 2014-2015 Jason Dobry 
  * @license MIT <https://github.com/js-data/js-data-angular-mocks/blob/master/LICENSE>
@@ -727,7 +727,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }];
 	};
 
-	angular.module('js-data-mocks', ['js-data']).value('version', '3.0.3').service('DSMockUtils', ['$q', function ($q) {
+	angular.module('js-data-mocks', ['js-data']).value('version', '3.1.0').service('DSMockUtils', ['$q', function ($q) {
 	  var MockDSExpectation = (function () {
 	    function MockDSExpectation(method, args) {
 	      _classCallCheck(this, MockDSExpectation);
@@ -844,7 +844,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        for (var i = 0; i < definitions.length; i++) {
 	          var definition = definitions[i];
 
-	          if (definition.match(name, resourceName)) {
+	          if (definition.match(name, resourceName) && definition.matchArgs(args)) {
 	            if (definition.response) {
 	              responses.push(_this2.createResponse(resourceName, deferred, definition.response));
 	              return deferred.promise;

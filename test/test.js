@@ -14,7 +14,7 @@ describe('test', function () {
   });
 
   it('should work', function () {
-    DS.inject.returns({ test: 'test' });
+    DS.inject.returns({test: 'test'});
 
     DS.expectFindAll('post', {
       where: {
@@ -53,7 +53,7 @@ describe('test', function () {
     $scope.$apply();
     DS.flush();
 
-    assert.deepEqual($scope.injected, { test: 'test' });
+    assert.deepEqual($scope.injected, {test: 'test'});
 
     assert.equal(DS.find.callCount, 4);
   });
@@ -63,26 +63,26 @@ describe('definitions', function () {
   var $q;
   var DS;
 
-  beforeEach(inject(function(_$q_, _DS_) {
+  beforeEach(inject(function (_$q_, _DS_) {
     $q = _$q_;
     DS = _DS_;
   }));
 
   it('should be matched by args', function (done) {
-    DS.when('findAll', 'post', { user: 1 })
-      .respond([{ id: 1, user: 1 }]);
+    DS.when('findAll', 'post', {user: 1})
+      .respond([{id: 1, user: 1}]);
 
-    DS.when('findAll', 'post', { user: 2 })
-      .respond([{ id: 2, user: 2 }]);
+    DS.when('findAll', 'post', {user: 2})
+      .respond([{id: 2, user: 2}]);
 
     $q.all(
-      DS.findAll('post', { user: 1 })
-        .then(function(posts) {
-          assert.deepEqual(posts, [{ id: 1, user: 1 }]);
+      DS.findAll('post', {user: 1})
+        .then(function (posts) {
+          assert.deepEqual(posts, [{id: 1, user: 1}]);
         }),
-      DS.findAll('post', { user: 2 })
-        .then(function(posts) {
-          assert.deepEqual(posts, [{ id: 2, user: 2 }]);
+      DS.findAll('post', {user: 2})
+        .then(function (posts) {
+          assert.deepEqual(posts, [{id: 2, user: 2}]);
         })
     ).finally(done);
 
