@@ -739,7 +739,7 @@ angular.module('js-data-mocks', ['js-data'])
           for (var i = 0; i < definitions.length; i++) {
             let definition = definitions[i];
 
-            if (definition.match(name, resourceName)) {
+            if (definition.match(name, resourceName) && definition.matchArgs(args)) {
               if (definition.response) {
                 responses.push(this.createResponse(resourceName, deferred, definition.response));
                 return deferred.promise;
