@@ -1,6 +1,28 @@
 angular.module('testApp', ['js-data'])
   .service('User', function (DS) {
-    return DS.defineResource('user');
+    return DS.defineResource({
+      name: 'user',
+      computed: {
+        fullName: {
+          get: function () {
+            return 'John Doe';
+          }
+        },
+        nickname: function () {
+          return 'Johny';
+        },
+        alternateNickname: [function () {
+          return 'Doey';
+        }],
+        initials: ['fullName', function (fullName) {
+          var names = fullName.split(' ');
+          var initials = names.reduce(function (initials, name){
+            return initials + name[0].toUpperCase();
+          }, '')
+          return initials;
+        }]
+      }
+    });
   })
   .controller('TestCtrl', function ($scope, DS, User) {
     'use strict';
